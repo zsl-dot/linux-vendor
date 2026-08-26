@@ -94,10 +94,11 @@ The Linux kernel is a monolithic kernel. Key top-level directories and their rol
 ```
 linux-demo/
 ├── linux-source/       # Git submodule: zsl-dot/linux, work branch
-├── build/              # Ignored kernel build output (O=../build)
+├── build/              # Ignored outputs; kernel build is build/linux-out/
 ├── go.sh               # Only supported workflow entry point
-├── workflow_config.py  # Shared paths, Fork and upstream configuration
-├── linux_fork_workflow.py # Linux master/work synchronization implementation
+├── lib/                # Shared workflow modules and VM infrastructure
+│   ├── workflow_config.py       # Paths, Fork and upstream configuration
+│   └── linux_fork_workflow.py   # Linux master/work synchronization
 ├── WORKFLOW.md         # Repository boundaries and required workflow
 ├── linux-doc/          # Unified learning and workflow documentation
 └── linux-learn/        # Self-contained learning demos (shareable)

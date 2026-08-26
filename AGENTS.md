@@ -30,6 +30,8 @@ Follow Linux kernel style for code under `linux-source/`: tabs for indentation, 
 
 Keep shell scripts Bash-compatible with `set -euo pipefail`. Put shared paths in `lib/workflow_config.py`; do not hardcode `linux-source`, `build`, or `/tmp` output paths in new scripts. Place new VM templates in `lib/vm/`, new runnable exercises in `linux-learn/`, and explanatory Markdown in `linux-doc/`.
 
+Write learning and knowledge-summary documentation in Chinese. Keep commands, API names, identifiers, and necessary English technical terms unchanged.
+
 ## Testing Guidelines
 
 After changing kernel build logic, run `./go.sh kernel`. After changing a demo, VM script, module, or BPF program, run `./go.sh demo`; inspect `build/logs/` on failure. For an individual demo, run its `run.sh build` from its directory.

@@ -27,11 +27,11 @@
 cd ..  # 到 linux-learn 的父目录
 
 # 完整 clone GitHub Fork（含完整历史）
-git clone git@github.com:mxd-dot/linux.git linux-source
+git clone git@github.com:zsl-dot/linux.git linux-source
 
 # 编译内核
-make -C linux-source O=../build/linux-out x86_64_defconfig
-make -C linux-source O=../build/linux-out -j$(nproc)
+make -C linux-source O=build/linux-out x86_64_defconfig
+make -C linux-source O=build/linux-out -j$(nproc)
 ```
 
 ### 2. 运行第一个 demo
