@@ -53,7 +53,7 @@ git push
 ```bash
 git clone --recurse-submodules git@github.com:zsl-dot/linux-demo.git
 cd linux-demo
-./go.sh check
+./go.sh init
 ./go.sh deps
 ./go.sh kernel
 ./go.sh demo
