@@ -16,6 +16,7 @@ LEARN_OUT = KERNEL_OUT / "linux-learn"
 ROOTFS_DIR = PROJECT_ROOT / "vm-rootfs"
 ROOTFS_IMG = PROJECT_ROOT / "vm-rootfs.img"
 GITHUB_REPOSITORY = "git@github.com:zsl-dot/linux.git"
+DEMO_GITHUB_REPOSITORY = "git@github.com:zsl-dot/linux-demo.git"
 KERNEL_UPSTREAM = "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
 KERNEL_WORK_BRANCH = "work"
 KERNEL_MASTER_BRANCH = "master"
@@ -32,6 +33,7 @@ def shell_exports() -> str:
         "ROOTFS_DIR": ROOTFS_DIR,
         "ROOTFS_IMG": ROOTFS_IMG,
         "LINUX_GITHUB_REPOSITORY": GITHUB_REPOSITORY,
+        "DEMO_GITHUB_REPOSITORY": DEMO_GITHUB_REPOSITORY,
         "KERNEL_UPSTREAM": KERNEL_UPSTREAM,
         "KERNEL_WORK_BRANCH": KERNEL_WORK_BRANCH,
         "KERNEL_MASTER_BRANCH": KERNEL_MASTER_BRANCH,
