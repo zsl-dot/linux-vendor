@@ -59,13 +59,10 @@ cd linux-learn/linux-vendor-module/hello
 └── linux-learn/       ← 本目录
     ├── env.sh
     ├── README.md
-    ├── vm/
-    │   ├── init          ← 基础 init 脚本模板
-    │   └── mk-rootfs.sh  ← 根文件系统生成脚本
     └── linux-vendor-module/
         ├── hello/          ← Demo 1
         ├── binder-demo/    ← Demo 2
-		├── netlink-demo/   ← Netlink 双向通信
+        ├── netlink-demo/   ← Netlink 双向通信
         ├── bpflib/         ← eBPF 共享库
         ├── ebpf-demo1/     ← Demo 3
         └── ebpf-demo2/     ← Demo 4
