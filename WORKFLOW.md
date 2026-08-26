@@ -5,11 +5,11 @@
 ```text
 kernel.org/torvalds/linux  →  zsl-dot/linux:master  →  zsl-dot/linux:work
                                                           ↓ submodule
-                                                   zsl-dot/linux-demo:main
+                                                  zsl-dot/linux-vendor:main
 ```
 
 - `zsl-dot/linux`：内核源码仓库。`master` 只同步官方上游，`work` 只放自己的内核改动。
-- `zsl-dot/linux-demo`：本仓库。保存构建、QEMU 验证、学习 demo、文档与工作流规则。
+- `zsl-dot/linux-vendor`：本仓库。保存构建、QEMU 验证、学习 demo、文档与工作流规则。
 - `linux-source/`：本仓库的 Git 子模块，固定在 `zsl-dot/linux` 的某个 `work` 提交。
 - `build/`、`vm-rootfs/`、`vm-rootfs.img`：可再生成产物，禁止提交。
 
@@ -51,8 +51,8 @@ git push
 ## 克隆到新机器
 
 ```bash
-git clone --recurse-submodules git@github.com:zsl-dot/linux-demo.git
-cd linux-demo
+git clone --recurse-submodules git@github.com:zsl-dot/linux-vendor.git
+cd linux-vendor
 ./go.sh init
 ./go.sh deps
 ./go.sh kernel
