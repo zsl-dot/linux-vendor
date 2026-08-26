@@ -1,20 +1,20 @@
 ---
 name: skill-knowledge
-description: Available skills and when to invoke them in this Linux kernel project
+description: 本 Linux 内核项目中可用辅助能力及其使用时机
 metadata:
   node_type: memory
   type: reference
   originSessionId: 8d523dcd-ccb9-4c0a-8b4f-186e392ce1e2
 ---
 
-Skills are specialized workflows invoked with the Skill tool.
+辅助能力是通过 Skill 工具调用的专用工作流。
 
-**Most useful for kernel work:**
+**对内核工作最有用的能力：**
 
-| Skill | When to use |
+| 能力 | 使用时机 |
 |---|---|
-| `security-review` | Before committing, review pending changes for security issues (kernel has strict security requirements) |
-| `simplify` | After writing or refactoring code, check for reuse opportunities, quality, dead code |
-| `review` | Review a pull request (kernel patches sent to mailing lists) |
+| `security-review` | 提交前检查待提交改动的安全问题；内核对安全要求严格 |
+| `simplify` | 编写或重构后检查复用机会、质量问题和死代码 |
+| `review` | 审查 Pull Request；内核补丁通常还需面向邮件列表审查 |
 
-**Key rule:** Only invoke skills that appear in the `<available-skills>` system reminder. Never guess or invent skill names. If a skill is already loaded, follow its instructions directly instead of calling the Skill tool again.
+**关键规则：** 只能调用 `<available-skills>` 系统提示中实际列出的能力，不能猜测或虚构名称。能力已加载时，直接遵循其说明，不要重复调用 Skill 工具。

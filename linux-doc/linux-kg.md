@@ -1,6 +1,6 @@
 ---
 name: linux-kg
-description: Build personal knowledge graph for Linux kernel learning — [[wiki-links]], call chains, concept comparisons, exercises
+description: 构建 Linux 内核学习知识图谱：[[双向链接]]、调用链、概念对比与练习
 ---
 
 # Linux 内核知识图谱
@@ -12,7 +12,7 @@ description: Build personal knowledge graph for Linux kernel learning — [[wiki
 ## 笔记存放
 
 ```
-linux-learn/notes/          # 从实践中沉淀的知识
+linux-doc/notes/            # 从实践中沉淀的知识
 ├── 进程管理/
 ├── 内存管理/
 ├── 文件系统/

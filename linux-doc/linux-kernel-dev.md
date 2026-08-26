@@ -1,6 +1,6 @@
 ---
 name: linux-kernel-dev
-description: Linux kernel development workflow — compile, test, debug, trace with QEMU/virtme-ng
+description: Linux 内核开发流程：使用 QEMU/virtme-ng 编译、测试、调试与追踪
 ---
 
 # Linux 内核开发环境
