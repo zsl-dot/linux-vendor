@@ -70,8 +70,8 @@ def init(args: argparse.Namespace) -> None:
 
 def update_master_from_fork(repo: Path) -> None:
     run("git", "fetch", "--progress", "origin", cwd=repo)
-    run("git", "switch", "master", cwd=repo)
-    run("git", "merge", "--ff-only", "origin/master", cwd=repo)
+    run("git", "switch", KERNEL_MASTER_BRANCH, cwd=repo)
+    run("git", "merge", "--ff-only", f"origin/{KERNEL_MASTER_BRANCH}", cwd=repo)
 
 
 def sync(args: argparse.Namespace) -> None:
@@ -79,9 +79,9 @@ def sync(args: argparse.Namespace) -> None:
     verify_checkout(repo)
     require_clean(repo)
     update_master_from_fork(repo)
-    run("git", "switch", "work", cwd=repo)
-    run("git", "rebase", "master", cwd=repo)
-    run("git", "push", "--progress", "--force-with-lease", "origin", "work", cwd=repo)
+    run("git", "switch", KERNEL_WORK_BRANCH, cwd=repo)
+    run("git", "rebase", KERNEL_MASTER_BRANCH, cwd=repo)
+    run("git", "push", "--progress", "--force-with-lease", "origin", KERNEL_WORK_BRANCH, cwd=repo)
     print("完成：work 已基于最新 master rebase 并推送。")
 
 
@@ -95,10 +95,13 @@ def sync_upstream(args: argparse.Namespace) -> None:
         run("git", "remote", "add", "upstream", args.upstream, cwd=repo)
     else:
         run("git", "remote", "set-url", "upstream", args.upstream, cwd=repo)
-    run("git", "fetch", "--progress", "upstream", "master", cwd=repo)
+    run("git", "fetch", "--progress", "upstream", KERNEL_MASTER_BRANCH, cwd=repo)
     # GitHub already owns the full ancestry of this fork, so this is an
     # ordinary fast-forward update.
-    run("git", "push", "--progress", "origin", "upstream/master:master", cwd=repo)
+    run(
+        "git", "push", "--progress", "origin",
+        f"upstream/{KERNEL_MASTER_BRANCH}:{KERNEL_MASTER_BRANCH}", cwd=repo,
+    )
     sync(args)
 
 

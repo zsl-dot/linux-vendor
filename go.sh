@@ -31,12 +31,18 @@ EOF
 
 check_workspace() {
     [ -f "$SCRIPT_DIR/.gitmodules" ] || die "linux-source 尚未登记为 Git 子模块"
-    [ -d "$KERNEL_SRC/.git" ] || die "linux-source 子模块未初始化；执行 git submodule update --init --recursive"
+    [ -e "$KERNEL_SRC/.git" ] || die "linux-source 子模块未初始化；执行 ./go.sh init"
     python3 "$SCRIPT_DIR/linux_fork_workflow.py" status
     [ "$(git -C "$KERNEL_SRC" branch --show-current)" = "$KERNEL_WORK_BRANCH" ] \
         || die "linux-source 必须位于 $KERNEL_WORK_BRANCH 分支；执行 ./go.sh init"
     echo "根仓库状态："
     git -C "$SCRIPT_DIR" status --short --branch
+}
+
+require_ready_workspace() {
+    [ -e "$KERNEL_SRC/.git" ] || die "linux-source 子模块未初始化；执行 ./go.sh init"
+    [ "$(git -C "$KERNEL_SRC" branch --show-current)" = "$KERNEL_WORK_BRANCH" ] \
+        || die "linux-source 必须位于 $KERNEL_WORK_BRANCH 分支；执行 ./go.sh init"
 }
 
 init_workspace() {
@@ -64,12 +70,12 @@ sync_workspace() {
 }
 
 case "${1:-all}" in
-    all)       install_deps ""; prepare_kernel; verify_all_demos ;;
-    --auto|-y) install_deps "--auto"; prepare_kernel; verify_all_demos ;;
+    all)       require_ready_workspace; install_deps ""; prepare_kernel; verify_all_demos ;;
+    --auto|-y) require_ready_workspace; install_deps "--auto"; prepare_kernel; verify_all_demos ;;
     init)      init_workspace ;;
     deps)      install_deps "" ;;
-    kernel)    prepare_kernel ;;
-    demo)      verify_all_demos ;;
+    kernel)    require_ready_workspace; prepare_kernel ;;
+    demo)      require_ready_workspace; verify_all_demos ;;
     sync)      sync_workspace ;;
     status)    python3 "$SCRIPT_DIR/linux_fork_workflow.py" status ;;
     check)     check_workspace ;;
