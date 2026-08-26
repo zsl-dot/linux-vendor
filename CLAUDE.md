@@ -99,11 +99,12 @@ linux-demo/
 ├── workflow_config.py  # Shared paths, Fork and upstream configuration
 ├── linux_fork_workflow.py # Linux master/work synchronization implementation
 ├── WORKFLOW.md         # Repository boundaries and required workflow
+├── linux-doc/          # Unified learning and workflow documentation
 └── linux-learn/        # Self-contained learning demos (shareable)
     ├── env.sh           # Shared config (kernel/src/build path checks)
     ├── README.md
     ├── vm/init          # Base init template
-    │   └── vm/mk-rootfs.sh  # Rootfs generation script
+    │   └── ../lib/vm/mk-rootfs.sh  # Rootfs generation script
     └── linux-vendor-module/
         ├── hello/       # Demo 1: minimal kernel module
         ├── binder-demo/ # Demo 2: Binder IPC server/client

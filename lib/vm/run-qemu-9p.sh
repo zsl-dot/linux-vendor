@@ -1,6 +1,6 @@
 #!/bin/bash
 # 使用 9P 共享目录启动 QEMU — 避免每次改代码重新打包 rootfs
-# 用法: ./vm/run-qemu-9p.sh [shared_dir]
+# 用法: ./lib/vm/run-qemu-9p.sh [shared_dir]
 #
 # VM 内挂载:
 #   mount -t 9p -o trans=virtio hostshare /mnt
@@ -9,7 +9,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-source "$SCRIPT_DIR/../env.sh"
+source "$SCRIPT_DIR/../../linux-learn/env.sh"
 check_kernel_source
 check_kernel_build
 ensure_rootfs

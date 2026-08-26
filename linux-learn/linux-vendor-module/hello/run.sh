@@ -9,7 +9,7 @@ source "$SCRIPT_DIR/../../env.sh"
 check_kernel_source
 check_kernel_build
 ensure_rootfs
-LOG="/tmp/hello-run.log"
+LOG="$LOG_DIR/hello-run.log"
 CMD="${1:-build}"
 
 echo "=== hello 模块验证流程 ==="

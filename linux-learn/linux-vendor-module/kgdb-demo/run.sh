@@ -9,7 +9,7 @@ source "$SCRIPT_DIR/../../env.sh"
 check_kernel_source
 check_kernel_build
 ensure_rootfs
-LOG="/tmp/kgdb-demo-run.log"
+LOG="$LOG_DIR/kgdb-demo-run.log"
 CMD="${1:-build}"
 
 echo "=== kgdb-demo 验证流程 ==="

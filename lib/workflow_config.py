@@ -12,10 +12,12 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 LINUX_LEARN_DIR = PROJECT_ROOT / "linux-learn"
 KERNEL_SRC = PROJECT_ROOT / "linux-source"
-KERNEL_OUT = PROJECT_ROOT / "build"
-LEARN_OUT = KERNEL_OUT / "linux-learn"
-ROOTFS_DIR = PROJECT_ROOT / "vm-rootfs"
-ROOTFS_IMG = PROJECT_ROOT / "vm-rootfs.img"
+BUILD_ROOT = PROJECT_ROOT / "build"
+KERNEL_OUT = BUILD_ROOT / "linux-out"
+LEARN_OUT = BUILD_ROOT / "linux-learn"
+ROOTFS_DIR = BUILD_ROOT / "vm-rootfs"
+ROOTFS_IMG = BUILD_ROOT / "vm-rootfs.img"
+LOG_DIR = BUILD_ROOT / "logs"
 GITHUB_REPOSITORY = "git@github.com:zsl-dot/linux.git"
 DEMO_GITHUB_REPOSITORY = "git@github.com:zsl-dot/linux-vendor.git"
 KERNEL_UPSTREAM = "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
@@ -29,10 +31,12 @@ def shell_exports() -> str:
         "PROJECT_ROOT": PROJECT_ROOT,
         "LINUX_LEARN_DIR": LINUX_LEARN_DIR,
         "KERNEL_SRC": KERNEL_SRC,
+        "BUILD_ROOT": BUILD_ROOT,
         "KERNEL_OUT": KERNEL_OUT,
         "LEARN_OUT": LEARN_OUT,
         "ROOTFS_DIR": ROOTFS_DIR,
         "ROOTFS_IMG": ROOTFS_IMG,
+        "LOG_DIR": LOG_DIR,
         "LINUX_GITHUB_REPOSITORY": GITHUB_REPOSITORY,
         "DEMO_GITHUB_REPOSITORY": DEMO_GITHUB_REPOSITORY,
         "KERNEL_UPSTREAM": KERNEL_UPSTREAM,

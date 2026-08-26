@@ -25,7 +25,7 @@ When analyzing Linux kernel code or concepts, after the user confirms understand
 | /proc filesystem, module parameters | `linux-vendor-module/hello-proc/` |
 | Binder IPC (ioctl, service manager) | `linux-vendor-module/binder-demo/` |
 | eBPF kprobe, perf_event, BPF syscall | `linux-vendor-module/ebpf-demo1/` or `ebpf-demo2/` |
-| ftrace, tracefs, Perfetto | `docs/linux-kernel-dev.md` |
+| ftrace, tracefs, Perfetto | `linux-doc/linux-kernel-dev.md` |
 | kgdb, kernel debugging | `linux-vendor-module/kgdb-demo/` |
 | Coding style, checkpatch, sparse | `CLAUDE.md` (project root) |
 | Kernel config (BPF, BTF, ftrace, 9P) | `go.sh` — the config section is self-documenting |

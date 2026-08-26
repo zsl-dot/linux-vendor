@@ -17,6 +17,7 @@ CONFIG_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 eval "$(python3 "$CONFIG_ROOT/lib/workflow_config.py" shell)"
 LEARN_DIR="$LINUX_LEARN_DIR"
 ROOT_DIR="$PROJECT_ROOT"
+mkdir -p "$LOG_DIR"
 
 # ---- 内核源码检查 ----
 check_kernel_source() {
@@ -47,11 +48,11 @@ check_kernel_build() {
 ========================================
   错误: 未找到编译好的内核 (bzImage)
 
-  请先在 <项目目录>/build/ 中编译内核:
+  请先在 <项目目录>/build/linux-out/ 中编译内核:
 
     cd <项目目录>/linux-source
-    make O=../build x86_64_defconfig
-    make O=../build -j$(nproc)
+    make O=../build/linux-out x86_64_defconfig
+    make O=../build/linux-out -j$(nproc)
 
   完整环境搭建请参考 README.md
 ========================================
@@ -61,7 +62,7 @@ EOF
 }
 
 # ---- rootfs 路径（编译产物，在 linux-learn 外部） ----
-ROOTFS_MKSCRIPT="$LEARN_DIR/vm/mk-rootfs.sh"
+ROOTFS_MKSCRIPT="$PROJECT_ROOT/lib/vm/mk-rootfs.sh"
 
 ensure_rootfs() {
     if [ ! -f "$ROOTFS_DIR/bin/busybox" ]; then

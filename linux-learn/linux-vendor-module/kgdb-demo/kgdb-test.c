@@ -3,12 +3,12 @@
  * kgdb 练习模块: 在函数里故意加个断点友好的位置
  *
  * 编译成模块拉进 VM:
- *   make && ../../vm/run-qemu-9p.sh  (通过 9P 共享目录加载)
+ *   make && ../../../lib/vm/run-qemu-9p.sh  (通过 9P 共享目录加载)
  *
  * VM 内: insmod /host/kgdb-demo/kgdb_test.ko
  *
  * 然后用 kgdb 启动 QEMU:
- *   ../../vm/virtme-ng/02-run-kgdb.sh
+ *   ../../../lib/vm/virtme-ng/02-run-kgdb.sh
  *
  * 终端2 连 gdb:
  *   gdb ../../build/vmlinux

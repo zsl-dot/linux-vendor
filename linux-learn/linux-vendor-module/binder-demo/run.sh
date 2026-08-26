@@ -9,7 +9,7 @@ source "$SCRIPT_DIR/../../env.sh"
 check_kernel_source
 check_kernel_build
 ensure_rootfs
-LOG="/tmp/binder-demo-run.log"
+LOG="$LOG_DIR/binder-demo-run.log"
 CMD="${1:-build}"
 
 echo "=== binder-demo 验证流程 ==="

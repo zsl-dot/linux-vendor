@@ -14,8 +14,8 @@ description: Linux kernel development workflow — compile, test, debug, trace w
 | 一键搭建+验证全部 demo | `../go.sh` |
 | 单个 demo 编译+VM验证 | `linux-vendor-module/<name>/run.sh build` |
 | busybox VM 启动 | 各 demo 的 `run.sh` 自动启动 QEMU |
-| virtme-ng 交互调试 | `vm/virtme-ng/01-run.sh` |
-| 9P 免打包启动 | `vm/run-qemu-9p.sh` |
+| virtme-ng 交互调试 | `../lib/vm/virtme-ng/01-run.sh` |
+| 9P 免打包启动 | `../lib/vm/run-qemu-9p.sh` |
 
 ## 两大 VM 环境
 
@@ -32,7 +32,7 @@ vim linux-vendor-module/hello/hello.c
 ./run.sh build
 
 # 3. 或用 virtme-ng 快速迭代（免打包 rootfs）
-../../vm/virtme-ng/01-run.sh
+../../../lib/vm/virtme-ng/01-run.sh
 # VM 内直接 insmod <宿主路径>/hello.ko
 ```
 
@@ -44,7 +44,7 @@ vim linux-vendor-module/hello/hello.c
 
 ## 重点约定
 
-- 编译产物一律在 `linux-learn/` 外部（`../build/`, `../vm-rootfs/`）
+- 编译产物统一位于项目根目录的 `build/`（内核为 `build/linux-out/`，QEMU rootfs 为 `build/vm-rootfs/`）
 - `linux-learn/` 是纯源码+脚本，可以直接分享
 - `env.sh` 和 `common.mk` 是所有脚本的单一配置来源
 

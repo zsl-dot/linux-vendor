@@ -10,8 +10,10 @@ kernel.org/torvalds/linux  →  zsl-dot/linux:master  →  zsl-dot/linux:work
 
 - `zsl-dot/linux`：内核源码仓库。`master` 只同步官方上游，`work` 只放自己的内核改动。
 - `zsl-dot/linux-vendor`：本仓库。保存构建、QEMU 验证、学习 demo、文档与工作流规则。
+- `linux-doc/`：唯一的知识文档目录；`linux-learn/` 只保留可运行 demo。
 - `linux-source/`：本仓库的 Git 子模块，固定在 `zsl-dot/linux` 的某个 `work` 提交。
-- `build/`、`vm-rootfs/`、`vm-rootfs.img`：可再生成产物，禁止提交。
+- `build/`：内核、demo、QEMU rootfs 和日志的唯一可再生成产物目录，禁止提交。
+- `lib/vm/`：QEMU/rootfs 的脚本和模板源码，必须提交；不是产物目录。
 
 ## 日常开发
 

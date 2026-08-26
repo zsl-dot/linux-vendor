@@ -9,7 +9,7 @@ source "$SCRIPT_DIR/../../env.sh"
 check_kernel_source
 check_kernel_build
 ensure_rootfs
-LOG="/tmp/ebpf-demo2-run.log"
+LOG="$LOG_DIR/ebpf-demo2-run.log"
 CMD="${1:-build}"
 
 echo "=== eBPF clone trace demo 验证流程 ==="
