@@ -1,0 +1,11 @@
+# 可再生成的内核、QEMU 与 Python 产物绝不提交。
+/build/
+/vm-rootfs/
+/vm-rootfs.img
+/__pycache__/
+*.py[cod]
+/compile_commands.json
+
+# 子模块拥有独立 Git 历史；根仓库只记录其提交指针。
+/linux-source/
+!/linux-source/

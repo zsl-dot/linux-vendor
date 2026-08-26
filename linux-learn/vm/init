@@ -1,0 +1,25 @@
+#!/bin/sh
+# 挂载虚拟文件系统
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devtmpfs devtmpfs /dev
+
+# 挂载 binderfs（如果内核支持）
+mkdir -p /mnt/binderfs
+mount -t binder binder /mnt/binderfs 2>/dev/null || true
+
+# 创建 /dev/binder 符号链接指向 binderfs 设备
+if [ -e /mnt/binderfs/binder ]; then
+	ln -sf /mnt/binderfs/binder /dev/binder
+fi
+
+echo ""
+echo "========================================"
+echo "  自定义内核启动成功"
+echo "  内核版本: $(uname -r)"
+echo "========================================"
+echo ""
+echo "  输入 off 退出虚拟机"
+echo ""
+
+exec /bin/sh

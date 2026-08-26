@@ -1,0 +1,4 @@
+[submodule "linux-source"]
+	path = linux-source
+	url = git@github.com:zsl-dot/linux.git
+	branch = work
