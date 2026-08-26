@@ -4,7 +4,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-eval "$(python3 "$SCRIPT_DIR/../../workflow_config.py" shell)"
+eval "$(python3 "$SCRIPT_DIR/../../lib/workflow_config.py" shell)"
 
 echo "=== 生成根文件系统: $ROOTFS_DIR ==="
 

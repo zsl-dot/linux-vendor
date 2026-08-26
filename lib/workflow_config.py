@@ -8,7 +8,8 @@ import sys
 from pathlib import Path
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent
+# 本文件位于 <project>/lib/，项目根目录是 lib 的父目录。
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 LINUX_LEARN_DIR = PROJECT_ROOT / "linux-learn"
 KERNEL_SRC = PROJECT_ROOT / "linux-source"
 KERNEL_OUT = PROJECT_ROOT / "build"

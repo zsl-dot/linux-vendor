@@ -8,7 +8,7 @@
 
 ## 共享路径配置
 
-项目路径统一定义在项目根目录的 `workflow_config.py`。所有 `linux-learn` 下的
+项目路径统一定义在 `lib/workflow_config.py`。所有 `linux-learn` 下的
 运行脚本都会加载它；如需改变内核源码、编译输出或根文件系统的位置，只修改
 此文件中的 `KERNEL_SRC`、`KERNEL_OUT`、`ROOTFS_DIR` 和 `ROOTFS_IMG`。
 
@@ -66,7 +66,7 @@ cd linux-learn/linux-vendor-module/hello
         └── ebpf-demo2/     ← Demo 4
 ```
 
-项目根目录中的 `go.sh` 是唯一总入口，`workflow_config.py` 和 `lib/` 是它加载的配置与功能模块。
+项目根目录中的 `go.sh` 是唯一总入口，`lib/workflow_config.py` 和 `lib/` 是它加载的配置与功能模块。
 
 > `vm-rootfs/` 和 `vm-rootfs.img` 是编译产物，由 `vm/mk-rootfs.sh` 首次运行 demo 时自动生成到 `linux-learn/` 的父目录下。
 

@@ -14,7 +14,7 @@ set -euo pipefail
 
 # SCRIPT_DIR 由调用方设置（demo 的 run.sh 所在目录）
 CONFIG_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-eval "$(python3 "$CONFIG_ROOT/workflow_config.py" shell)"
+eval "$(python3 "$CONFIG_ROOT/lib/workflow_config.py" shell)"
 LEARN_DIR="$LINUX_LEARN_DIR"
 ROOT_DIR="$PROJECT_ROOT"
 
@@ -28,7 +28,7 @@ check_kernel_source() {
   请将内核源码放在: <项目目录>/linux-source/
 
   获取方式:
-    python3 linux_fork_workflow.py init
+    python3 lib/linux_fork_workflow.py init
 
   完整环境搭建请参考 README.md
 ========================================

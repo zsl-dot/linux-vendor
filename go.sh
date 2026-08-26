@@ -3,7 +3,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-eval "$(python3 "$SCRIPT_DIR/workflow_config.py" shell)"
+eval "$(python3 "$SCRIPT_DIR/lib/workflow_config.py" shell)"
 GREEN='\033[0;32m'; BLUE='\033[0;34m'; RED='\033[0;31m'; NC='\033[0m'
 DEMO_DIR="$LINUX_LEARN_DIR/linux-vendor-module"
 LOG_DIR="${LOG_DIR:-/tmp/linux-learn-logs}"
@@ -32,7 +32,7 @@ EOF
 check_workspace() {
     [ -f "$SCRIPT_DIR/.gitmodules" ] || die "linux-source 尚未登记为 Git 子模块"
     [ -e "$KERNEL_SRC/.git" ] || die "linux-source 子模块未初始化；执行 ./go.sh init"
-    python3 "$SCRIPT_DIR/linux_fork_workflow.py" status
+    python3 "$SCRIPT_DIR/lib/linux_fork_workflow.py" status
     [ "$(git -C "$KERNEL_SRC" branch --show-current)" = "$KERNEL_WORK_BRANCH" ] \
         || die "linux-source 必须位于 $KERNEL_WORK_BRANCH 分支；执行 ./go.sh init"
     echo "根仓库状态："
@@ -55,7 +55,7 @@ init_workspace() {
 sync_workspace() {
     git -C "$SCRIPT_DIR" diff --quiet || die "根仓库有未提交修改；先提交后再同步"
     git -C "$SCRIPT_DIR" diff --cached --quiet || die "根仓库暂存区有未提交修改；先提交后再同步"
-    python3 "$SCRIPT_DIR/linux_fork_workflow.py" sync-upstream
+    python3 "$SCRIPT_DIR/lib/linux_fork_workflow.py" sync-upstream
     git -C "$SCRIPT_DIR" add linux-source
     if ! git -C "$SCRIPT_DIR" diff --cached --quiet; then
         git -C "$SCRIPT_DIR" commit -m "chore: sync Linux work revision"
@@ -77,7 +77,7 @@ case "${1:-all}" in
     kernel)    require_ready_workspace; prepare_kernel ;;
     demo)      require_ready_workspace; verify_all_demos ;;
     sync)      sync_workspace ;;
-    status)    python3 "$SCRIPT_DIR/linux_fork_workflow.py" status ;;
+    status)    python3 "$SCRIPT_DIR/lib/linux_fork_workflow.py" status ;;
     check)     check_workspace ;;
     clean)     do_clean ;;
     -h|--help|help) usage ;;
