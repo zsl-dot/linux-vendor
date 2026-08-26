@@ -5,6 +5,7 @@
 | 文档 | 内容 |
 |---|---|
 | [user-kernel-communication.md](user-kernel-communication.md) | 用户空间与内核空间的通信方式 |
+| [netlink-user-kernel-demo.md](netlink-user-kernel-demo.md) | Netlink 用户进程与内核模块双向通信示例 |
 | [process-management.md](process-management.md) | 调度、睡眠唤醒与进程管理 |
 | [abi.md](abi.md) | API、ABI 与内核接口 |
 | [linux-kernel-dev.md](linux-kernel-dev.md) | 编译、QEMU、virtme-ng 调试流程 |

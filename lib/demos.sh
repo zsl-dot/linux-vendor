@@ -13,7 +13,7 @@ run_demo() {
 verify_all_demos() {
     step "4/4" "验证全部 demo..."
     local failed="" demo
-    for demo in hello hello-proc binder-demo ebpf-demo1 ebpf-demo2 kgdb-demo; do
+    for demo in hello hello-proc binder-demo netlink-demo ebpf-demo1 ebpf-demo2 kgdb-demo; do
         run_demo "$demo" || failed="$failed $demo"
     done
     [ -z "$failed" ] || die "失败:$failed（日志：$LOG_DIR）"
@@ -23,7 +23,7 @@ verify_all_demos() {
 do_clean() {
     echo "清理 demo 与 QEMU 编译产物..."
     local demo
-    for demo in hello hello-proc binder-demo ebpf-demo1 ebpf-demo2 kgdb-demo counter-exercise bpflib; do
+    for demo in hello hello-proc binder-demo netlink-demo ebpf-demo1 ebpf-demo2 kgdb-demo counter-exercise bpflib; do
         make -C "$DEMO_DIR/$demo" clean > /dev/null 2>&1 || true
     done
     make -C "$LINUX_LEARN_DIR/simulations/wake_q_demo" clean > /dev/null 2>&1 || true

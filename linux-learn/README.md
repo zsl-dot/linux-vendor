@@ -65,6 +65,7 @@ cd linux-learn/linux-vendor-module/hello
     └── linux-vendor-module/
         ├── hello/          ← Demo 1
         ├── binder-demo/    ← Demo 2
+		├── netlink-demo/   ← Netlink 双向通信
         ├── bpflib/         ← eBPF 共享库
         ├── ebpf-demo1/     ← Demo 3
         └── ebpf-demo2/     ← Demo 4
@@ -82,8 +83,9 @@ cd linux-learn/linux-vendor-module/hello
 |---|------|------|------|
 | 1 | `linux-vendor-module/hello/` | 内核模块 | 最简 Hello World 模块，insmod/rmmod |
 | 2 | `linux-vendor-module/binder-demo/` | 内核模块 + IPC | Binder server 注册服务，client 发送消息 |
-| 3 | `linux-vendor-module/ebpf-demo1/` | eBPF kprobe | 追踪 `execve()` 系统调用 |
-| 4 | `linux-vendor-module/ebpf-demo2/` | eBPF kprobe | 追踪 `clone()` 系统调用 |
+| 3 | `linux-vendor-module/netlink-demo/` | Netlink | 用户进程与内核模块的请求/响应通信 |
+| 4 | `linux-vendor-module/ebpf-demo1/` | eBPF kprobe | 追踪 `execve()` 系统调用 |
+| 5 | `linux-vendor-module/ebpf-demo2/` | eBPF kprobe | 追踪 `clone()` 系统调用 |
 
 ## 验证流程
 
