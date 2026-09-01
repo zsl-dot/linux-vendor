@@ -38,14 +38,7 @@ echo "=== Netlink done ==="
 exec /bin/sh
 TESTEOF
 
-dd if=/dev/zero of="$ROOTFS_IMG" bs=1M count=128 status=none
-mke2fs -q -d "$ROOTFS_DIR" "$ROOTFS_IMG" 2>/dev/null
-timeout 12 qemu-system-x86_64 \
-	-kernel "$KERNEL_IMAGE" \
-	-append "root=/dev/vda rw console=ttyS0 init=/init nokaslr" \
-	-drive file="$ROOTFS_IMG",format=raw,if=none,id=drive0 \
-	-device virtio-blk-pci,drive=drive0 \
-	-m 1G -smp 2 -display none -serial file:"$LOG" -no-reboot 2>&1 || true
+run_qemu "$LOG"
 
 mv "$ROOTFS_DIR/init.bak" "$ROOTFS_DIR/init"
 grep -E 'Netlink request|userspace received|netlink_demo:|Netlink done' "$LOG"

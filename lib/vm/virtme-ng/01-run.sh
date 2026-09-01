@@ -24,4 +24,4 @@ echo "可用工具: perf, strace, gdb, trace-cmd"
 echo "退出: Ctrl+D 或 poweroff"
 echo ""
 
-vng --arch x86_64 --cpus 4 --memory 512M --run "$KERNEL_OUT"
+vng --arch amd64 --cpus 4 --memory 512M --run "$KERNEL_OUT"

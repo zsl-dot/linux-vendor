@@ -23,11 +23,11 @@ verify_all_demos() {
 do_clean() {
     echo "清理 demo 与 QEMU 编译产物..."
     local demo
-    for demo in hello hello-proc binder-demo netlink-demo ebpf-demo1 ebpf-demo2 kgdb-demo counter-exercise bpflib; do
+    for demo in hello hello-proc binder-demo netlink-demo ebpf-demo1 ebpf-demo2 kgdb-demo bpflib; do
         make -C "$DEMO_DIR/$demo" clean > /dev/null 2>&1 || true
     done
-    make -C "$LINUX_LEARN_DIR/simulations/wake_q_demo" clean > /dev/null 2>&1 || true
-    make -C "$LINUX_LEARN_DIR/simulations/wait_queue_demo" clean > /dev/null 2>&1 || true
+    make -C "$LINUX_LEARN_DIR/demo/wake_q_demo" clean > /dev/null 2>&1 || true
+    make -C "$LINUX_LEARN_DIR/demo/wait_queue_demo" clean > /dev/null 2>&1 || true
     rm -rf "$LEARN_OUT" "$ROOTFS_DIR" "$ROOTFS_IMG" "$LOG_DIR"
     ok "清理完成（不删除内核编译目录：$KERNEL_OUT）"
 }

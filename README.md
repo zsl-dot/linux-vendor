@@ -6,10 +6,14 @@
 
 - `linux-source/`：`zsl-dot/linux` 子模块，进行内核代码修改与编译。
 - `linux-learn/`：内核模块、Netlink、Binder、eBPF 及用户态模拟 demo。
+- `linux-learn/demo/`：可直接编译运行的用户态机制 demo（如 `wake_q_demo`、`wait_queue_demo`）。
 - `linux-doc/`：中文学习与开发文档的唯一入口。
 - `lib/`：共享 Shell/Python 工作流代码；`lib/vm/` 存放 QEMU 和 rootfs 模板。
 - `build/`：内核、demo、rootfs、镜像和日志等可再生成产物，已被 Git 忽略。
 - `go.sh`：项目统一命令入口。
+
+更完整的 QEMU/virtme-ng 原理、交互方式和适用场景见
+[`linux-doc/linux-kernel-dev.md`](linux-doc/linux-kernel-dev.md)。
 
 ## 快速开始
 
@@ -62,6 +66,14 @@ cd linux-learn/linux-vendor-module/hello
 ```
 
 在 VM 中可执行 `uname -a`、`dmesg`、`lsmod`、`insmod module.ko` 和 `rmmod module_name`；执行 `poweroff` 退出。Netlink 等用户态/内核态交互 demo 也可在对应目录运行 `./run.sh build`，日志统一写入 `build/logs/`。
+
+若要一次准备多个模块并交互测试，可使用：
+
+```bash
+./lib/vm/virtme-ng/03-run-demos.sh hello hello-proc netlink-demo
+```
+
+脚本会先编译指定 demo，再进入 VM 并打印模块路径。等待 VM 提示符出现后，确认 `uname -r` 输出为项目自定义内核版本，再执行 `sudo insmod`；不要在宿主机执行该命令。默认不带参数时准备 `hello`、`hello-proc`、`netlink-demo` 和 `binder-demo`。
 
 调试内核可使用 KGDB。终端一启动：
 

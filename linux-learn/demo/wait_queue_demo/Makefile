@@ -1,5 +1,5 @@
 # 编译产物输出到外部，不污染源码目录
-BUILD_DIR := $(abspath ../../../build/linux-learn/simulations/wait_queue_demo)
+BUILD_DIR := $(abspath ../../../build/linux-learn/wait_queue_demo)
 
 CFLAGS = -Wall -Wextra -O0 -g -pthread
 LDLIBS = -pthread

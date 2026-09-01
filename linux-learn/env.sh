@@ -70,3 +70,19 @@ ensure_rootfs() {
         "$ROOTFS_MKSCRIPT"
     fi
 }
+
+# ---- 统一 QEMU 验证入口 ----
+# 调用方需先准备 ROOTFS_DIR/init 和 ROOTFS_IMG；日志路径作为第一个参数，
+# 可选第二个参数覆盖超时时间。
+run_qemu() {
+    local log="$1" timeout_sec="${2:-12}"
+    mkdir -p "$(dirname "$log")"
+    dd if=/dev/zero of="$ROOTFS_IMG" bs=1M count=128 status=none
+    mke2fs -q -d "$ROOTFS_DIR" "$ROOTFS_IMG" 2>/dev/null
+    timeout "$timeout_sec" qemu-system-x86_64 \
+        -kernel "$KERNEL_IMAGE" \
+        -append "root=/dev/vda rw console=ttyS0 init=/init nokaslr" \
+        -drive file="$ROOTFS_IMG",format=raw,if=none,id=drive0 \
+        -device virtio-blk-pci,drive=drive0 \
+        -m 1G -smp 2 -display none -serial "file:$log" -no-reboot 2>&1 || true
+}
