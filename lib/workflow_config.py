@@ -10,11 +10,11 @@ from pathlib import Path
 
 # 本文件位于 <project>/lib/，项目根目录是 lib 的父目录。
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-LINUX_LEARN_DIR = PROJECT_ROOT / "linux-learn"
+VENDOR_MODULE_DIR = PROJECT_ROOT / "vendor-module"
 KERNEL_SRC = PROJECT_ROOT / "linux-source"
 BUILD_ROOT = PROJECT_ROOT / "build"
 KERNEL_OUT = BUILD_ROOT / "linux-out"
-LEARN_OUT = BUILD_ROOT / "linux-learn"
+LEARN_OUT = BUILD_ROOT / "vendor-module"
 ROOTFS_DIR = BUILD_ROOT / "vm-rootfs"
 ROOTFS_IMG = BUILD_ROOT / "vm-rootfs.img"
 LOG_DIR = BUILD_ROOT / "logs"
@@ -29,7 +29,7 @@ def shell_exports() -> str:
     """Return safely quoted exports for: eval "$(python3 workflow_config.py shell)"."""
     values = {
         "PROJECT_ROOT": PROJECT_ROOT,
-        "LINUX_LEARN_DIR": LINUX_LEARN_DIR,
+        "VENDOR_MODULE_DIR": VENDOR_MODULE_DIR,
         "KERNEL_SRC": KERNEL_SRC,
         "BUILD_ROOT": BUILD_ROOT,
         "KERNEL_OUT": KERNEL_OUT,

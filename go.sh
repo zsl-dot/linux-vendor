@@ -5,7 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 eval "$(python3 "$SCRIPT_DIR/lib/workflow_config.py" shell)"
 GREEN='\033[0;32m'; BLUE='\033[0;34m'; RED='\033[0;31m'; NC='\033[0m'
-DEMO_DIR="$LINUX_LEARN_DIR/linux-vendor-module"
+DEMO_DIR="$VENDOR_MODULE_DIR/kernel"
 mkdir -p "$LOG_DIR"
 
 source "$SCRIPT_DIR/lib/common.sh"

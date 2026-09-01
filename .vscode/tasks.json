@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Kernel: generate compile_commands",
+      "type": "shell",
+      "command": "make -C \"${workspaceFolder}/linux-source\" O=\"${workspaceFolder}/build/linux-out\" compile_commands.json",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kernel: build",
+      "type": "shell",
+      "command": "./go.sh kernel",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Demo: epoll",
+      "type": "shell",
+      "command": "cd vendor-module/kernel/epoll-demo && ./run.sh build",
+      "problemMatcher": "$gcc"
+    },
+    {
+      "label": "Demo: all",
+      "type": "shell",
+      "command": "./go.sh demo",
+      "problemMatcher": "$gcc"
+    }
+  ]
+}

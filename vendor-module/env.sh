@@ -4,18 +4,18 @@
 set -euo pipefail
 
 # 目录结构:
-#   ROOT_DIR/               ← 项目根目录（linux-learn 的父目录）
+#   ROOT_DIR/               ← 项目根目录（vendor-module 的父目录）
 #   ├── linux-source/       ← 内核源码
 #   ├── build/              ← 内核编译产物
-#   └── linux-learn/        ← 本目录
+#   └── vendor-module/        ← 本目录
 #       ├── env.sh           ← 本文件
-#       ├── linux-vendor-module/
+#       ├── demo/              ← 可运行学习 demo
 #       └── vm/
 
 # SCRIPT_DIR 由调用方设置（demo 的 run.sh 所在目录）
 CONFIG_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 eval "$(python3 "$CONFIG_ROOT/lib/workflow_config.py" shell)"
-LEARN_DIR="$LINUX_LEARN_DIR"
+LEARN_DIR="$VENDOR_MODULE_DIR"
 ROOT_DIR="$PROJECT_ROOT"
 mkdir -p "$LOG_DIR"
 
@@ -61,7 +61,7 @@ EOF
     fi
 }
 
-# ---- rootfs 路径（编译产物，在 linux-learn 外部） ----
+# ---- rootfs 路径（编译产物，在 vendor-module 外部） ----
 ROOTFS_MKSCRIPT="$PROJECT_ROOT/lib/vm/mk-rootfs.sh"
 
 ensure_rootfs() {

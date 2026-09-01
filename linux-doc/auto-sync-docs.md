@@ -22,12 +22,12 @@ metadata:
 
 | 主题 | 记录位置 |
 |---|---|
-| 内核模块基础（init/exit、printk） | `linux-learn/linux-vendor-module/hello/`；demo 本身是实践说明 |
-| /proc 文件系统、模块参数 | `linux-learn/linux-vendor-module/hello-proc/` |
-| Binder IPC（ioctl、服务管理） | `linux-learn/linux-vendor-module/binder-demo/` |
-| Netlink 用户态/内核通信 | `linux-doc/netlink-user-kernel-demo.md` 与 `linux-learn/linux-vendor-module/netlink-demo/` |
-| eBPF kprobe、perf_event、BPF 系统调用 | `linux-learn/linux-vendor-module/ebpf-demo1/` 或 `ebpf-demo2/` |
+| 内核模块基础（init/exit、printk） | `vendor-module/kernel/hello/`；demo 本身是实践说明 |
+| /proc 文件系统、模块参数 | `vendor-module/kernel/hello-proc/` |
+| Binder IPC（ioctl、服务管理） | `vendor-module/kernel/binder-demo/` |
+| Netlink 用户态/内核通信 | `linux-doc/netlink-user-kernel-demo.md` 与 `vendor-module/kernel/netlink-demo/` |
+| eBPF kprobe、perf_event、BPF 系统调用 | `vendor-module/kernel/ebpf-demo1/` 或 `ebpf-demo2/` |
 | ftrace、tracefs、Perfetto | `linux-doc/linux-kernel-dev.md` |
-| kgdb、内核调试 | `linux-learn/linux-vendor-module/kgdb-demo/` |
+| kgdb、内核调试 | `vendor-module/kernel/kgdb-demo/` |
 | 编码风格、checkpatch、sparse | 项目根目录 `CLAUDE.md` |
 | 内核配置（BPF、BTF、ftrace、9P） | `lib/kernel.sh` 与 `lib/workflow_config.py` |

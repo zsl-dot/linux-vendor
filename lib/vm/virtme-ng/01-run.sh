@@ -5,7 +5,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-source "$SCRIPT_DIR/../../../linux-learn/env.sh"
+source "$SCRIPT_DIR/../../../vendor-module/env.sh"
 check_kernel_source
 check_kernel_build
 

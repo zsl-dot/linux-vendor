@@ -4,11 +4,11 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-source "$SCRIPT_DIR/../../../linux-learn/env.sh"
+source "$SCRIPT_DIR/../../../vendor-module/env.sh"
 check_kernel_source
 check_kernel_build
 
-DEMO_ROOT="$LINUX_LEARN_DIR/linux-vendor-module"
+DEMO_ROOT="$VENDOR_MODULE_DIR/kernel"
 DEFAULT_DEMOS=(hello hello-proc netlink-demo binder-demo)
 if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
     sed -n '2,3p' "$0"

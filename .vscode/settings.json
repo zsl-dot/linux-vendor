@@ -1,0 +1,39 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/build": true,
+    "**/linux-source/Documentation": true,
+    "**/linux-source/tools/testing": true
+  },
+  "search.exclude": {
+    "**/build": true,
+    "**/linux-source/Documentation": true,
+    "**/linux-source/tools/testing": true
+  },
+  "C_Cpp.default.compileCommands": "${workspaceFolder}/build/linux-out/compile_commands.json",
+  "C_Cpp.default.includePath": [
+    "${workspaceFolder}/linux-source/include",
+    "${workspaceFolder}/linux-source/include/uapi",
+    "${workspaceFolder}/linux-source/arch/x86/include",
+    "${workspaceFolder}/linux-source/arch/x86/include/uapi",
+    "${workspaceFolder}/build/linux-out/include",
+    "${workspaceFolder}/build/linux-out/arch/x86/include",
+    "${workspaceFolder}/build/linux-out/arch/x86/include/generated",
+    "${workspaceFolder}/build/linux-out/arch/x86/include/generated/uapi"
+  ],
+  "C_Cpp.default.browse.path": [
+    "${workspaceFolder}/linux-source",
+    "${workspaceFolder}/vendor-module"
+  ],
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}/build/linux-out",
+    "--header-insertion=never",
+    "--background-index"
+  ],
+  "C_Cpp.intelliSenseEngine": "default",
+  "editor.rulers": [80, 100],
+  "files.associations": {
+    "Kconfig*": "shellscript",
+    "Kbuild": "makefile"
+  }
+}

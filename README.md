@@ -5,8 +5,7 @@
 ## 目录结构
 
 - `linux-source/`：`zsl-dot/linux` 子模块，进行内核代码修改与编译。
-- `linux-learn/`：内核模块、Netlink、Binder、eBPF 及用户态模拟 demo。
-- `linux-learn/demo/`：可直接编译运行的用户态机制 demo（如 `wake_q_demo`、`wait_queue_demo`）。
+- `vendor-module/`：统一管理内核模块、用户态程序及机制 demo（如 `wake_q_demo`、`wait_queue_demo`、`epoll-demo`）。
 - `linux-doc/`：中文学习与开发文档的唯一入口。
 - `lib/`：共享 Shell/Python 工作流代码；`lib/vm/` 存放 QEMU 和 rootfs 模板。
 - `build/`：内核、demo、rootfs、镜像和日志等可再生成产物，已被 Git 忽略。
@@ -14,6 +13,13 @@
 
 更完整的 QEMU/virtme-ng 原理、交互方式和适用场景见
 [`linux-doc/linux-kernel-dev.md`](linux-doc/linux-kernel-dev.md)。
+
+## VS Code 开发
+
+使用 VS Code 打开仓库根目录即可浏览 `linux-source/`。建议安装
+`clangd` 或 Microsoft C/C++ 扩展，然后运行命令面板中的
+`Kernel: generate compile_commands`，即可启用内核头文件和符号跳转。
+常用构建任务位于 `.vscode/tasks.json`。
 
 ## 快速开始
 
@@ -55,7 +61,7 @@ cd ..
 每个 demo 的 `run.sh build` 会编译模块、制作 rootfs、启动 QEMU，并检查 `dmesg`。例如：
 
 ```bash
-cd linux-learn/linux-vendor-module/hello
+cd vendor-module/kernel/hello
 ./run.sh build
 ```
 

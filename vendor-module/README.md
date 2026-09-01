@@ -8,7 +8,7 @@
 
 ## 共享路径配置
 
-项目路径统一定义在 `lib/workflow_config.py`。所有 `linux-learn` 下的
+项目路径统一定义在 `lib/workflow_config.py`。所有 `vendor-module` 下的
 运行脚本都会加载它；如需改变内核源码、编译输出或根文件系统的位置，只修改
 此文件中的 `BUILD_ROOT`、`KERNEL_SRC`、`KERNEL_OUT`、`ROOTFS_DIR`、`ROOTFS_IMG`
 和 `LOG_DIR`。
@@ -22,9 +22,9 @@
 #   <项目根目录>/
 #   ├── linux-source/  ← 内核源码
 #   ├── build/         ← 所有编译、QEMU、日志产物 (自动生成)
-#   └── linux-learn/   ← 本目录
+#   └── vendor-module/   ← 本目录
 
-cd ..  # 到 linux-learn 的父目录
+cd ..  # 到 vendor-module 的父目录
 
 # 完整 clone GitHub Fork（含完整历史）
 git clone git@github.com:zsl-dot/linux.git linux-source
@@ -37,7 +37,7 @@ make -C linux-source O=build/linux-out -j$(nproc)
 ### 2. 运行第一个 demo
 
 ```bash
-cd linux-learn/linux-vendor-module/hello
+cd vendor-module/kernel/hello
 ./run.sh build
 ```
 
@@ -52,25 +52,27 @@ cd linux-learn/linux-vendor-module/hello
 ├── linux-source/      ← 内核源码 (自行 clone)
 ├── build/             ← 所有可再生成产物
 │   ├── linux-out/     ← 内核 bzImage、vmlinux、.config
-│   ├── linux-learn/   ← 模块、BPF 和用户态 demo
+│   ├── vendor-module/   ← 模块、BPF 和用户态 demo
 │   ├── vm-rootfs/     ← QEMU 根文件系统目录
 │   ├── vm-rootfs.img  ← QEMU 根文件系统镜像
 │   └── logs/          ← QEMU 与 demo 运行日志
-└── linux-learn/       ← 本目录
+└── vendor-module/       ← 本目录
     ├── env.sh
     ├── README.md
-    └── linux-vendor-module/
-        ├── hello/          ← Demo 1
-        ├── binder-demo/    ← Demo 2
-        ├── netlink-demo/   ← Netlink 双向通信
-        ├── bpflib/         ← eBPF 共享库
-        ├── ebpf-demo1/     ← Demo 3
-        └── ebpf-demo2/     ← Demo 4
+    ├── kernel/         ← 内核模块和 QEMU 验证 demo
+    │   ├── hello/      ← Demo 1
+    │   ├── binder-demo/← Demo 2
+    │   ├── netlink-demo/、epoll-demo/
+    │   ├── ebpf-demo1/、ebpf-demo2/
+    │   └── kgdb-demo/、bpflib/
+    └── model/          ← 用户态机制模拟
+        ├── wake_q_demo/
+        └── wait_queue_demo/
 ```
 
 项目根目录中的 `go.sh` 是唯一总入口，`lib/workflow_config.py` 和 `lib/` 是它加载的配置与功能模块。
 
-`lib/vm/` 只保存受版本控制的 QEMU/rootfs 构建脚本与 `init` 模板；其生成结果统一写入 `build/vm-rootfs/`、`build/vm-rootfs.img` 和 `build/logs/`。
+`lib/vm/`只保存受版本控制的 QEMU/rootfs 构建脚本与 `init` 模板；其生成结果统一写入 `build/vm-rootfs/`、`build/vm-rootfs.img` 和 `build/logs/`。
 
 > `build/vm-rootfs/` 与 `build/vm-rootfs.img` 是编译产物，由 `lib/vm/mk-rootfs.sh` 首次运行 demo 时自动生成。
 
@@ -78,11 +80,12 @@ cd linux-learn/linux-vendor-module/hello
 
 | # | 目录 | 类型 | 说明 |
 |---|------|------|------|
-| 1 | `linux-vendor-module/hello/` | 内核模块 | 最简 Hello World 模块，insmod/rmmod |
-| 2 | `linux-vendor-module/binder-demo/` | 内核模块 + IPC | Binder server 注册服务，client 发送消息 |
-| 3 | `linux-vendor-module/netlink-demo/` | Netlink | 用户进程与内核模块的请求/响应通信 |
-| 4 | `linux-vendor-module/ebpf-demo1/` | eBPF kprobe | 追踪 `execve()` 系统调用 |
-| 5 | `linux-vendor-module/ebpf-demo2/` | eBPF kprobe | 追踪 `clone()` 系统调用 |
+| 1 | `kernel/hello/` | 内核模块 | 最简 Hello World 模块，insmod/rmmod |
+| 2 | `kernel/binder-demo/` | 内核模块 + IPC | Binder server 注册服务，client 发送消息 |
+| 3 | `kernel/netlink-demo/` | Netlink | 用户进程与内核模块的请求/响应通信 |
+| 4 | `kernel/epoll-demo/` | 字符设备 | 验证 poll/epoll 事件通知 |
+| 5 | `model/wake_q_demo/` | 用户态模拟 | 模拟 wake_q 链表与唤醒流程 |
+| 6 | `model/wait_queue_demo/` | 用户态模拟 | 模拟等待队列和睡眠唤醒 |
 
 ## 验证流程
 

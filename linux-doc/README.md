@@ -1,6 +1,6 @@
 # Linux 内核学习文档
 
-本目录是项目唯一的知识文档入口；`linux-learn/` 仅保留可编译、可运行的 demo 与其最小使用说明。
+本目录是项目唯一的知识文档入口；`vendor-module/` 仅保留可编译、可运行的 demo 与其最小使用说明。
 
 | 文档 | 内容 |
 |---|---|
@@ -12,6 +12,7 @@
 | [linux-kg.md](linux-kg.md) | 内核知识图谱与学习路线 |
 | [learning-by-simulation.md](learning-by-simulation.md) | 用户态模拟 demo 的编写约定 |
 | [skill-knowledge.md](skill-knowledge.md) | 开发辅助能力说明 |
+| [cpp-go-kernel-skill.md](cpp-go-kernel-skill.md) | 用 C++/Go 面向对象模型理解内核 C 实现 |
 | [auto-sync-docs.md](auto-sync-docs.md) | 学习文档同步约定 |
 
 构建和运行产物不放在本目录，统一位于 `../build/`。

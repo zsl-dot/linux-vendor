@@ -101,12 +101,12 @@ linux-demo/
 │   └── linux_fork_workflow.py   # Linux master/work synchronization
 ├── WORKFLOW.md         # Repository boundaries and required workflow
 ├── linux-doc/          # Unified learning and workflow documentation
-└── linux-learn/        # Self-contained learning demos (shareable)
+└── vendor-module/        # Self-contained learning demos (shareable)
     ├── env.sh           # Shared config (kernel/src/build path checks)
     ├── README.md
     ├── vm/init          # Base init template
     │   └── ../lib/vm/mk-rootfs.sh  # Rootfs generation script
-    └── linux-vendor-module/
+    └── vendor-module/
         ├── hello/       # Demo 1: minimal kernel module
         ├── binder-demo/ # Demo 2: Binder IPC server/client
         ├── bpflib/      # Shared eBPF library (loader + elf extract)
@@ -116,7 +116,7 @@ linux-demo/
 
 ## Learning Demo Workflow
 
-All demos in `linux-learn/` follow the same pattern:
+All demos in `vendor-module/` follow the same pattern:
 - `make` — compiles the demo
 - `./run.sh build` — full rebuild + VM verification
 - `./run.sh update` — incremental build + VM verification

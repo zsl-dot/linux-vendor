@@ -196,7 +196,7 @@ tracepoint / kprobe / syscall
        用户态 loader
 ```
 
-这尤其适合追踪和观测；本项目的 `linux-learn/linux-vendor-module/ebpf-demo1` 与 `ebpf-demo2` 是对应实践。
+这尤其适合追踪和观测；本项目的 `vendor-module/kernel/ebpf-demo1` 与 `ebpf-demo2` 是对应实践。
 
 ## 10. Binder：字符设备、ioctl 与 mmap 的组合
 
@@ -208,7 +208,7 @@ Android Binder 是一个有代表性的综合案例：
                    └─ mmap 建立高效缓冲区
 ```
 
-应用通过 `/dev/binder` 与 Binder 驱动交互；命令主要经 ioctl 提交，传输缓冲区通过 mmap 高效共享。项目中的 `linux-learn/linux-vendor-module/binder-demo` 可用于理解这个组合。
+应用通过 `/dev/binder` 与 Binder 驱动交互；命令主要经 ioctl 提交，传输缓冲区通过 mmap 高效共享。项目中的 `vendor-module/kernel/binder-demo` 可用于理解这个组合。
 
 ## 选择建议
 

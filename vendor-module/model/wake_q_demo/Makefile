@@ -1,5 +1,5 @@
 # 编译产物输出到外部，不污染源码目录
-BUILD_DIR := $(abspath ../../../build/linux-learn/wake_q_demo)
+BUILD_DIR := $(abspath ../../../build/vendor-module/model/wake_q_demo)
 
 CFLAGS = -Wall -Wextra -O0 -g
 
