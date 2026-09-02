@@ -9,6 +9,9 @@
 | [process-management.md](process-management.md) | 调度、睡眠唤醒与进程管理 |
 | [abi.md](abi.md) | API、ABI 与内核接口 |
 | [linux-kernel-dev.md](linux-kernel-dev.md) | 编译、QEMU、virtme-ng 调试流程 |
+| [kernel-build-deep-dive.md](kernel-build-deep-dive.md) | bzImage、Kbuild、.ko、obj-y/obj-m 与 AOSP/GKI 对照 |
+| [hello-end-to-end.md](hello-end-to-end.md) | 以 hello 为例的内核、模块和 QEMU 完整编译验证流程 |
+| [hello-build-chain.html](hello-build-chain.html) | 以 HTML 流程图说明 hello 编译、匹配与验证 |
 | [linux-kg.md](linux-kg.md) | 内核知识图谱与学习路线 |
 | [learning-by-simulation.md](learning-by-simulation.md) | 用户态模拟 demo 的编写约定 |
 | [skill-knowledge.md](skill-knowledge.md) | 开发辅助能力说明 |

@@ -14,6 +14,11 @@
 更完整的 QEMU/virtme-ng 原理、交互方式和适用场景见
 [`linux-doc/linux-kernel-dev.md`](linux-doc/linux-kernel-dev.md)。
 
+如果不熟悉内核和模块的编译关系，建议先阅读
+[`linux-doc/hello-end-to-end.md`](linux-doc/hello-end-to-end.md)，该文档以
+`hello` 为例，从配置、编译 `bzImage`、编译 `hello.ko` 到 QEMU 加载逐步说明。
+也可以直接用浏览器打开 [`linux-doc/hello-build-chain.html`](linux-doc/hello-build-chain.html) 查看可视化流程。
+
 ## VS Code 开发
 
 使用 VS Code 打开仓库根目录即可浏览 `linux-source/`。建议安装
@@ -45,6 +50,40 @@ cd linux-vendor
 ```
 
 单个 demo 可在其目录执行 `./run.sh build`；运行日志位于 `build/logs/`。
+
+## 手动验证 hello 模块
+
+按下面三段式操作：
+
+```bash
+# 1. 宿主机：启动自定义内核 VM
+./lib/vm/virtme-ng/01-run.sh
+```
+
+进入 VM 后（提示符变为 `zslmxd@virtme-ng`）：
+
+```bash
+# 2. VM 内：加载自定义模块
+sudo insmod ~/26work/linux-vendor/build/vendor-module/hello/hello.ko
+```
+
+继续在同一个 VM Shell 中执行：
+
+```bash
+# 3. VM 内：读取模块日志
+dmesg | grep 'hello:'
+```
+
+预期看到：
+
+```text
+hello: loading out-of-tree module taints kernel.
+hello: module loaded
+```
+
+必须在
+`virtme-ng` VM 内执行这些命令；宿主机内核版本不同，直接 `insmod` 会报
+`Invalid module format`。
 
 ## 验证与交互自定义内核
 

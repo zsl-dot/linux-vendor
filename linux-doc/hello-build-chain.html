@@ -1,0 +1,25 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>hello 编译链路</title><style>body{max-width:1000px;margin:2rem auto;font:16px/1.7 system-ui;background:#f6f8fa;color:#202124}section{background:#fff;border:1px solid #d0d7de;border-radius:8px;padding:1rem;margin:1rem 0}h1,h2{color:#0759a8}.flow{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}.node{border:2px solid #0969da;border-radius:7px;padding:.5rem}pre{background:#0d1117;color:#e6edf3;padding:1rem;border-radius:6px;overflow:auto}table{width:100%;border-collapse:collapse}td,th{border:1px solid #d0d7de;padding:.5rem;text-align:left}th{background:#f6f8fa}</style>
+<h1>hello：从内核配置到模块运行</h1>
+<p>本文以 <code>vendor-module/kernel/hello</code> 为例，说明内核、外部模块和 QEMU 的完整关系。</p>
+<section><h2>1. 整体链路</h2><div class="flow"><span class="node">linux-source</span>→<span class="node">.config</span>→<span class="node">vmlinux</span>→<span class="node">bzImage</span>→<span class="node">QEMU 自定义内核</span></div><p>模块：<span class="node">hello.c + Kbuild</span>→<span class="node">hello.o + modpost</span>→<span class="node">hello.ko</span>→<span class="node">insmod</span>→<span class="node">hello_init()</span></p></section>
+<section><h2>2. 配置和编译内核</h2><pre><code>mkdir -p build/linux-out
+make -C linux-source O=build/linux-out x86_64_defconfig
+make -C linux-source O=build/linux-out olddefconfig
+make -C linux-source O=build/linux-out -j"$(nproc)"</code></pre><p>配置写入 <code>build/linux-out/.config</code>。项目脚本额外启用模块、BPF、BTF 和 9P。构建关系为：</p><pre><code>内核 .c → .o（obj-y）→ built-in.a → vmlinux → arch/x86/boot/bzImage</code></pre><p><code>bzImage</code> 是 QEMU 用 <code>-kernel</code> 加载的 x86 启动镜像；<code>vmlinux</code> 是供 GDB/KGDB 使用的完整 ELF。</p></section>
+<section><h2>3. 编译 hello.ko</h2><pre><code># vendor-module/kernel/hello/Kbuild
+obj-m := hello.o
+
+make -C vendor-module/kernel/hello clean
+make -C vendor-module/kernel/hello</code></pre><p>实际调用：</p><pre><code>make -C linux-source O=build/linux-out M=build/vendor-module/hello modules</code></pre><table><tr><th>参数</th><th>含义</th></tr><tr><td><code>-C</code></td><td>使用内核源码中的 Kbuild</td></tr><tr><td><code>O=</code></td><td>复用内核配置、头文件和编译参数</td></tr><tr><td><code>M=</code></td><td>指定外部模块目录</td></tr></table><p><code>obj-m</code> 生成可运行时加载的 <code>hello.ko</code>；<code>obj-y</code> 会链接进 <code>vmlinux</code>，不能用 <code>rmmod</code> 卸载。普通 <code>gcc hello.c -o hello</code> 只会生成用户态程序。</p></section>
+<section><h2>4. System.map 与 Module.symvers</h2><table><tr><th>文件</th><th>作用</th></tr><tr><td><code>System.map</code></td><td>记录内核符号（如 <code>start_kernel</code>）和链接地址，用于离线地址分析</td></tr><tr><td><code>Module.symvers</code></td><td>记录内核导出符号及 CRC，供外部模块 <code>modpost</code> 检查依赖和版本</td></tr></table><pre><code>grep -w start_kernel build/linux-out/System.map
+modinfo build/vendor-module/hello/hello.ko | grep -E '^(name|vermagic|license|depends):'</code></pre></section>
+<section><h2>5. 匹配检查</h2><pre><code>make -C linux-source O=build/linux-out kernelrelease
+file build/linux-out/arch/x86/boot/bzImage
+test -s build/vendor-module/hello/hello.ko</code></pre><p>进入 VM 后执行 <code>uname -r</code>，必须与 <code>kernelrelease</code> 以及模块 <code>vermagic</code> 对应。宿主机版本不同会得到 <code>Invalid module format</code>。</p></section>
+<section><h2>6. 自动验证</h2><pre><code>cd vendor-module/kernel/hello
+./run.sh build</code></pre><p>脚本编译模块、复制到 rootfs、修改临时 <code>/init</code>、制作 <code>rootfs.img</code>，再用 QEMU 启动 <code>bzImage</code>。日志在 <code>build/logs/hello-run.log</code>。</p></section>
+<section><h2>7. 手动验证</h2><pre><code># 宿主机启动 VM：./lib/vm/virtme-ng/01-run.sh
+# 进入 zslmxd@virtme-ng 后：
+uname -r; sudo insmod ~/26work/linux-vendor/build/vendor-module/hello/hello.ko; dmesg | grep 'hello:'; sudo rmmod hello; dmesg | grep 'hello:'</code></pre><p>看到 <code>hello: module loaded</code> 和 <code>hello: module unloaded</code> 即完成生命周期验证。</p></section>
+<section><h2>8. 改动后重新编译</h2><table><tr><th>改动</th><th>操作</th></tr><tr><td>只改 <code>hello.c</code></td><td>重新执行模块 <code>make</code></td></tr><tr><td>改内核头文件、配置或导出符号</td><td>先 <code>./go.sh kernel</code>，再编译模块</td></tr><tr><td>更换架构/编译器/关键配置</td><td>重新生成配置并全量编译</td></tr></table></section>
+</html>
