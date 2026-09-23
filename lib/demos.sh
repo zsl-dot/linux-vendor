@@ -1,15 +1,17 @@
 #!/bin/bash
-# 自动发现 $DEMO_DIR 下所有带 run.sh 的 demo；新增 demo 无需再改本文件。
+# 自动发现 $DEMO_DIR/<学习域>/<demo>/ 下所有带 run.sh 的 demo；
+# 输出"域/demo"相对路径（如 basic/hello），新增 demo 无需再改本文件。
 all_kernel_demos() {
-    local d
-    for d in "$DEMO_DIR"/*/run.sh; do
+    local d rel
+    for d in "$DEMO_DIR"/*/*/run.sh; do
         [ -f "$d" ] || continue
-        basename "$(dirname "$d")"
+        rel="${d#"$DEMO_DIR"/}"
+        dirname "$rel"
     done | sort
 }
 
 run_demo() {
-    local name="$1" dir="$DEMO_DIR/$1" log="$LOG_DIR/$1.log"
+    local name="$1" dir="$DEMO_DIR/$1" log="$LOG_DIR/$(basename "$1").log"
     echo ""; echo -e "${BLUE}--- $name ---${NC}"
     [ -f "$dir/run.sh" ] || { echo "  跳过（无 run.sh）"; return; }
     if (cd "$dir" && ./run.sh build) > "$log" 2>&1; then
@@ -32,7 +34,7 @@ verify_all_demos() {
 do_clean() {
     echo "清理 demo 与 QEMU 编译产物..."
     local mk
-    for mk in "$DEMO_DIR"/*/Makefile "$VENDOR_MODULE_DIR"/model/*/Makefile; do
+    for mk in "$DEMO_DIR"/*/*/Makefile "$VENDOR_MODULE_DIR"/model/*/Makefile; do
         [ -f "$mk" ] || continue
         make -C "$(dirname "$mk")" clean > /dev/null 2>&1 || true
     done

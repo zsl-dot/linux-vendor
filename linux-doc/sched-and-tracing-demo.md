@@ -13,7 +13,7 @@
 
 **流程要点**：修改 `lib/kernel.sh` 的 `--enable` 列表后必须递增 flavor 名（如 `base` → `base2`），否则 `prepare_kernel` 走"复用配置"分支，修改不生效。
 
-## sched-demo（vendor-module/kernel/sched-demo/）
+## sched-demo（vendor-module/kernel/sched/sched-demo/）
 
 QEMU 内以 `init=/sched-check` 无人值守验证五项能力：
 
@@ -23,7 +23,7 @@ QEMU 内以 `init=/sched-check` 无人值守验证五项能力：
 4. **CFS 带宽限流**：cgroup v2 下设 `cpu.max = 2000 100000`（20% CPU），跑满 3 秒后读 `cpu.stat`，要求 `nr_throttled > 0`；
 5. **sched_ext 可用性**：`/sys/kernel/sched_ext` 是否存在（未开时 SKIP）。
 
-## ebpf-demo3（vendor-module/kernel/ebpf-demo3/）
+## ebpf-demo3（vendor-module/kernel/ebpf/ebpf-demo3/）
 
 与 ebpf-demo1（kprobe）对照的**静态 tracepoint** demo：挂 `sched:sched_switch`，每次调度切换打印一条 `eBPF: sched_switch`。
 

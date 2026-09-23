@@ -22,7 +22,7 @@
     {
       "label": "Demo: epoll",
       "type": "shell",
-      "command": "cd vendor-module/kernel/epoll-demo && ./run.sh build",
+      "command": "cd vendor-module/kernel/comm/epoll-demo && ./run.sh build",
       "problemMatcher": "$gcc"
     },
     {

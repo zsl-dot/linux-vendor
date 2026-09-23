@@ -108,7 +108,7 @@ cd ..
 Android 专用的 UAS 则执行源码结构验证。例如：
 
 ```bash
-cd vendor-module/kernel/hello
+cd vendor-module/kernel/basic/hello
 ./run.sh build
 ```
 

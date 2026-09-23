@@ -1,6 +1,6 @@
 # Linux 内核与外部模块构建原理
 
-本文以 `vendor-module/kernel/hello` 为例，解释 `bzImage`、`.ko`、Kbuild、
+本文以 `vendor-module/kernel/basic/hello` 为例，解释 `bzImage`、`.ko`、Kbuild、
 `obj-y`/`obj-m` 以及构建后的校验方法。
 
 ## 阅读路线
@@ -131,7 +131,7 @@ hello_init() → dmesg
 
 ```bash
 ./go.sh kernel
-cd vendor-module/kernel/hello
+cd vendor-module/kernel/basic/hello
 make
 ./run.sh build
 ```
@@ -383,8 +383,8 @@ make -C linux-source O=build/linux-out kernelrelease
 ### 14.4 用内核 Kbuild 编译 `hello.ko`
 
 ```bash
-make -C vendor-module/kernel/hello clean
-make -C vendor-module/kernel/hello
+make -C vendor-module/kernel/basic/hello clean
+make -C vendor-module/kernel/basic/hello
 test -s build/vendor-module/hello/hello.ko
 ```
 
@@ -667,9 +667,9 @@ readelf -h /tmp/hello-user
 
 ### hello.ko 编译失败
 
-- `linux/module.h not found`：错误地用普通 GCC 编译。必须执行 `make -C vendor-module/kernel/hello`，让 Kbuild 提供内核头文件和宏。
+- `linux/module.h not found`：错误地用普通 GCC 编译。必须执行 `make -C vendor-module/kernel/basic/hello`，让 Kbuild 提供内核头文件和宏。
 - `modpost: "foo" undefined`：模块引用了未导出的内核符号。检查 `grep -w foo build/linux-out/Module.symvers`；必要时使用 `EXPORT_SYMBOL(foo)` 后重新编译内核。
-- `disagrees about version of symbol`：模块使用的 `.config`、`Module.symvers` 或头文件与内核不一致。执行 `./go.sh kernel`，再执行 `make -C vendor-module/kernel/hello clean all`。
+- `disagrees about version of symbol`：模块使用的 `.config`、`Module.symvers` 或头文件与内核不一致。执行 `./go.sh kernel`，再执行 `make -C vendor-module/kernel/basic/hello clean all`。
 
 ### insmod 加载失败
 

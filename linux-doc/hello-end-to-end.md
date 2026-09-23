@@ -1,17 +1,17 @@
 # hello：从内核编译到模块验证的完整流程
 
-本文只围绕一个 demo：`vendor-module/kernel/hello/`。目标是回答：内核如何配置和编译，`hello.ko` 如何使用同一套 Kbuild 编译，以及它如何在 QEMU 自定义内核中加载。
+本文只围绕一个 demo：`vendor-module/kernel/basic/hello/`。目标是回答：内核如何配置和编译，`hello.ko` 如何使用同一套 Kbuild 编译，以及它如何在 QEMU 自定义内核中加载。
 
 ## 0. 先理解四个目录
 
 ```text
 linux-source/                         # 内核源码（输入）
 build/linux-out/                     # 内核输出（.config、vmlinux、bzImage）
-vendor-module/kernel/hello/          # hello 源码和 Kbuild（输入）
+vendor-module/kernel/basic/hello/          # hello 源码和 Kbuild（输入）
 build/vendor-module/hello/           # hello.ko（输出）
 ```
 
-`linux-source` 和 `vendor-module/kernel/hello` 是源码；`build/` 下的内容都可删除后重新生成。
+`linux-source` 和 `vendor-module/kernel/basic/hello` 是源码；`build/` 下的内容都可删除后重新生成。
 
 ## 1. 生成内核配置
 
@@ -53,7 +53,7 @@ build/linux-out/Module.symvers                  # 导出符号和 CRC 数据库
 
 ## 3. 查看 `hello` 的构建配置
 
-`vendor-module/kernel/hello/Makefile`：
+`vendor-module/kernel/basic/hello/Makefile`：
 
 ```make
 include ../../common.mk
@@ -72,8 +72,8 @@ obj-m := hello.o
 执行：
 
 ```bash
-make -C vendor-module/kernel/hello clean
-make -C vendor-module/kernel/hello
+make -C vendor-module/kernel/basic/hello clean
+make -C vendor-module/kernel/basic/hello
 ```
 
 内部等价于：
@@ -99,7 +99,7 @@ modinfo build/vendor-module/hello/hello.ko | grep -E '^(name|vermagic|license|de
 ## 4. 自动 QEMU 验证
 
 ```bash
-cd vendor-module/kernel/hello
+cd vendor-module/kernel/basic/hello
 ./run.sh build
 ```
 

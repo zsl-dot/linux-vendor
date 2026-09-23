@@ -1,6 +1,6 @@
 # Netlink：用户进程与内核模块双向通信示例
 
-本项目的 `vendor-module/kernel/netlink-demo/` 演示用户进程与内核模块如何通过 Netlink 进行“请求—响应”通信。
+本项目的 `vendor-module/kernel/comm/netlink-demo/` 演示用户进程与内核模块如何通过 Netlink 进行“请求—响应”通信。
 
 ```text
 netlink-client                 netlink_demo.ko
@@ -259,7 +259,7 @@ Generic Netlink：配置、启动、停止、状态和事件
 ## 运行
 
 ```bash
-cd vendor-module/kernel/netlink-demo
+cd vendor-module/kernel/comm/netlink-demo
 ./run.sh build
 ```
 

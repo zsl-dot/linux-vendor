@@ -4,7 +4,7 @@
 
 - `linux-source/` 是 `zsl-dot/linux` 的 Git 子模块。只在其 `work` 分支上开发；`master` 分支仅用于镜像上游 Linux。
 - `lib/` 存放共享工作流代码：Shell 模块、Python 配置、Git 同步逻辑，以及 `lib/vm/` 下的 VM 基础设施。
-- `vendor-module/` 存放可运行的内核模块、BPF 和用户态模拟 demo。
+- `vendor-module/kernel/` 下的 demo 按学习域分层（basic/comm/ebpf/container/sched/android），复用同一个内核；`vendor-module/model/` 是用户态机制模拟。
 - `linux-doc/` 是学习与工作流文档的唯一存放位置。
 - `build/` 存放所有可再生成的内核、demo、VM 和日志产物；已被 Git 忽略，禁止提交。
 
@@ -32,7 +32,7 @@
 
 `linux-source/` 下的代码遵循 Linux 内核风格：Tab 缩进、K&R 大括号、小写加下划线命名，使用 `pr_info()`/`pr_err()` 而非裸 `printk()`。
 
-Shell 脚本保持 Bash 兼容并使用 `set -euo pipefail`。共享路径统一放在 `lib/workflow_config.py`；新脚本中不要硬编码 `linux-source`、`build` 或 `/tmp` 输出路径。新的 VM 模板放 `lib/vm/`，新的可运行练习放 `vendor-module/`，说明性 Markdown 放 `linux-doc/`。
+Shell 脚本保持 Bash 兼容并使用 `set -euo pipefail`。共享路径统一放在 `lib/workflow_config.py`；新脚本中不要硬编码 `linux-source`、`build` 或 `/tmp` 输出路径。新的 VM 模板放 `lib/vm/`，新的可运行练习放 `vendor-module/kernel/<对应学习域>/`（demo 由 `./go.sh demo` 自动发现，无需登记），说明性 Markdown 放 `linux-doc/`。
 
 学习与知识总结类文档用中文撰写。命令、API 名称、标识符和必要的英文技术术语保持原样。
 

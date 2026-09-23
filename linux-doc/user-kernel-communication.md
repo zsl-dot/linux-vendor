@@ -101,7 +101,7 @@ echo 1 | sudo tee /proc/my_demo
 
 ### `hello-proc` 示例的读写流程
 
-`vendor-module/kernel/hello-proc/hello_module.c` 使用下面的代码在 `/proc` 目录下创建一个 procfs 条目：
+`vendor-module/kernel/basic/hello-proc/hello_module.c` 使用下面的代码在 `/proc` 目录下创建一个 procfs 条目：
 
 ```c
 proc_entry = proc_create("hello_module", 0666, NULL, &hello_proc_ops);
@@ -226,7 +226,7 @@ proc_remove(proc_entry);
 删除 `/proc/hello_module`，避免留下指向已卸载模块代码的 procfs 操作入口。可以使用项目脚本在 QEMU 中完整验证：
 
 ```bash
-cd vendor-module/kernel/hello-proc
+cd vendor-module/kernel/basic/hello-proc
 ./run.sh build
 ```
 
@@ -327,7 +327,7 @@ tracepoint / kprobe / syscall
        用户态 loader
 ```
 
-这尤其适合追踪和观测；本项目的 `vendor-module/kernel/ebpf-demo1` 与 `ebpf-demo2` 是对应实践。
+这尤其适合追踪和观测；本项目的 `vendor-module/kernel/ebpf/ebpf-demo1` 与 `ebpf-demo2` 是对应实践。
 
 ## 10. Binder：字符设备、ioctl 与 mmap 的组合
 
@@ -339,7 +339,7 @@ Android Binder 是一个有代表性的综合案例：
                    └─ mmap 建立高效缓冲区
 ```
 
-应用通过 `/dev/binder` 与 Binder 驱动交互；命令主要经 ioctl 提交，传输缓冲区通过 mmap 高效共享。项目中的 `vendor-module/kernel/binder-demo` 可用于理解这个组合。
+应用通过 `/dev/binder` 与 Binder 驱动交互；命令主要经 ioctl 提交，传输缓冲区通过 mmap 高效共享。项目中的 `vendor-module/kernel/comm/binder-demo` 可用于理解这个组合。
 
 ## 选择建议
 

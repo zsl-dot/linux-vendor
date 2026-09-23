@@ -1,6 +1,6 @@
 # UAS vendor 组件分析与验证
 
-`vendor-module/kernel/uas/performance/` 是 Transsion Android vendor 的 UAS
+`vendor-module/kernel/android/uas/performance/` 是 Transsion Android vendor 的 UAS
 （调度性能）组件快照，当前快照来自 `tran_master_main` 的提交
 `59411ff93c8f20cd16e553f463d973f102183b2f`。它不是面向通用 Linux 的独立
 内核模块，而是 Android BSP 的一部分。
@@ -21,12 +21,12 @@ MediaTek UFS/scheduler 路径以及 Android vendor 目录。这些路径在本�
 
 ## 工作台中的 demo 形式
 
-`vendor-module/kernel/uas/run.sh` 提供结构验证入口：
+`vendor-module/kernel/android/uas/run.sh` 提供结构验证入口：
 
 ```bash
-./vendor-module/kernel/uas/run.sh build
-./vendor-module/kernel/uas/run.sh check
-./vendor-module/kernel/uas/run.sh update
+./vendor-module/kernel/android/uas/run.sh build
+./vendor-module/kernel/android/uas/run.sh check
+./vendor-module/kernel/android/uas/run.sh update
 ```
 
 脚本检查以下内容：

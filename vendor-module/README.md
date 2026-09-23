@@ -38,7 +38,7 @@ cd ..  # 到 vendor-module 的父目录
 ### 2. 运行第一个 demo
 
 ```bash
-cd vendor-module/kernel/hello
+cd vendor-module/kernel/basic/hello
 ./run.sh build
 ```
 
@@ -60,12 +60,13 @@ cd vendor-module/kernel/hello
 └── vendor-module/     ← 本目录
     ├── env.sh
     ├── README.md
-    ├── kernel/         ← 内核模块和 QEMU 验证 demo
-    │   ├── hello/、hello-proc/、kgdb-demo/
-    │   ├── netlink-demo/、epoll-demo/、binder-demo/
-    │   ├── ebpf-demo1/、ebpf-demo2/、ebpf-demo3/、bpflib/
-    │   ├── container-demo/、sched-demo/
-    │   └── uas/
+    ├── kernel/         ← 内核模块和 QEMU 验证 demo（按学习域分层）
+    │   ├── basic/       ← hello/、hello-proc/、kgdb-demo/
+    │   ├── comm/        ← netlink-demo/、epoll-demo/、binder-demo/
+    │   ├── ebpf/        ← bpflib/、ebpf-demo1..3/
+    │   ├── container/   ← container-demo/
+    │   ├── sched/       ← sched-demo/
+    │   └── android/     ← uas/
     └── model/          ← 用户态机制模拟
         ├── wake_q_demo/
         └── wait_queue_demo/
@@ -81,16 +82,16 @@ cd vendor-module/kernel/hello
 
 | # | 目录 | 类型 | 说明 |
 |---|------|------|------|
-| 1 | `kernel/hello/` | 内核模块 | 最简 Hello World 模块，insmod/rmmod |
-| 2 | `kernel/binder-demo/` | 内核模块 + IPC | Binder server 注册服务，client 发送消息 |
-| 3 | `kernel/netlink-demo/` | Netlink | 用户进程与内核模块的请求/响应通信 |
-| 4 | `kernel/epoll-demo/` | 字符设备 | 验证 poll/epoll 事件通知 |
+| 1 | `kernel/basic/hello/` | 内核模块 | 最简 Hello World 模块，insmod/rmmod |
+| 2 | `kernel/comm/binder-demo/` | 内核模块 + IPC | Binder server 注册服务，client 发送消息 |
+| 3 | `kernel/comm/netlink-demo/` | Netlink | 用户进程与内核模块的请求/响应通信 |
+| 4 | `kernel/comm/epoll-demo/` | 字符设备 | 验证 poll/epoll 事件通知 |
 | 5 | `model/wake_q_demo/` | 用户态模拟 | 模拟 wake_q 链表与唤醒流程 |
 | 6 | `model/wait_queue_demo/` | 用户态模拟 | 模拟等待队列和睡眠唤醒 |
-| 7 | `kernel/uas/` | vendor 源码结构验证 | 校验 UAS Android vendor 组件的接口层和 Kbuild 对象引用 |
-| 8 | `kernel/container-demo/` | 容器化内核能力验证 | namespace/cgroups-v2/overlayfs/netns（QEMU guest 内实测） |
-| 9 | `kernel/ebpf-demo3/` | eBPF tracepoint | 挂载 sched:sched_switch 静态 tracepoint，与 demo1 的 kprobe 对照 |
-| 10 | `kernel/sched-demo/` | 调度环境验证 | sched tracepoint/函数级 ftrace/cgroup CPU 限流/sched_ext 可用性 |
+| 7 | `kernel/android/uas/` | vendor 源码结构验证 | 校验 UAS Android vendor 组件的接口层和 Kbuild 对象引用 |
+| 8 | `kernel/container/container-demo/` | 容器化内核能力验证 | namespace/cgroups-v2/overlayfs/netns（QEMU guest 内实测） |
+| 9 | `kernel/ebpf/ebpf-demo3/` | eBPF tracepoint | 挂载 sched:sched_switch 静态 tracepoint，与 demo1 的 kprobe 对照 |
+| 10 | `kernel/sched/sched-demo/` | 调度环境验证 | sched tracepoint/函数级 ftrace/cgroup CPU 限流/sched_ext 可用性 |
 
 ## 验证流程
 
@@ -100,7 +101,7 @@ cd vendor-module/kernel/hello
 
 VM 输出通过 grep 提取关键日志打印到终端。
 
-`kernel/uas/` 是 Android vendor 源码结构验证 demo，不制作 QEMU rootfs；其依赖
+`kernel/android/uas/` 是 Android vendor 源码结构验证 demo，不制作 QEMU rootfs；其依赖
 和验证边界见 [`linux-doc/uas-vendor-demo.md`](../linux-doc/uas-vendor-demo.md)。
 
 ## 安装依赖
