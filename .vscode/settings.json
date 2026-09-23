@@ -25,12 +25,14 @@
     "${workspaceFolder}/linux-source",
     "${workspaceFolder}/vendor-module"
   ],
+  "clangd.path": "/usr/bin/clangd",
   "clangd.arguments": [
-    "--compile-commands-dir=${workspaceFolder}/build/linux-out",
+    "--compile-commands-dir=${workspaceFolder}/build/clangd",
     "--header-insertion=never",
-    "--background-index"
+    "--background-index",
+    "--query-driver=**"
   ],
-  "C_Cpp.intelliSenseEngine": "default",
+  "C_Cpp.intelliSenseEngine": "disabled",
   "editor.rulers": [80, 100],
   "files.associations": {
     "Kconfig*": "shellscript",

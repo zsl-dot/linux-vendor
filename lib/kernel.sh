@@ -1,24 +1,68 @@
 #!/bin/bash
+# 准备并编译内核 —— 项目唯一的内核产物（defconfig 基线 + 项目特性）。
+#
+# 配置策略：x86_64_defconfig 基线（保持 bzImage 可启动大小）+ 显式开启
+# 本项目验证所需的能力：
+#   - Binder/BinderFS（容器化 Android 验证）
+#   - DRM VKMS / VirtIO-GPU（显示管线验证，modetest）
+#   - drm_sched（GPU 调度器）+ KUnit 测试（GPU 驱动验证）
+#   - 容器化运行时（overlayfs/veth/bridge/NAT/MEMCG/CFS_BANDWIDTH/USER_NS）
+#   - 调度学习（SCHED_CLASS_EXT=eBPF 可编程调度器、函数级 ftrace、HIST_TRIGGERS）
+#   - 9P 共享、BPF/BTF（DEBUG_INFO_DWARF5 是 BTF 的前提，不开会被 olddefconfig 静默丢弃）
+# 一个内核同时服务：demo 的 QEMU 自动验证、GPU 驱动/调度器学习、clangd 跳转。
+#
+# 注意：clangd 的真实编译条目覆盖为 ~9%（defconfig 只编译部分源码），
+# 其余由 lib/gen_index_db.py 的兜底条目补齐至 100%。
 prepare_kernel() {
-    step "2/4" "准备内核源码..."
-    if [ ! -d "$KERNEL_SRC/include" ]; then
-        echo "克隆 GitHub Fork 的完整 Linux 历史（约 6GB）..."
-        git clone --progress "$LINUX_GITHUB_REPOSITORY" "$KERNEL_SRC"
-    fi
-    ok "内核源码已就绪: $KERNEL_SRC"
-    step "3/4" "编译内核..."
+    # go.sh 的所有入口都先经过 require_ready_workspace，这里只做防御性检查；
+    # 源码初始化统一由 ./go.sh init 完成。
+    step "2/4" "检查内核源码..."
+    [ -d "$KERNEL_SRC/include" ] || die "linux-source 内核源码不存在；先执行 ./go.sh init"
+    step "3/4" "编译内核（defconfig 基线 + 项目特性）..."
     mkdir -p "$KERNEL_OUT"
-    if [ ! -f "$KERNEL_OUT/.config" ]; then
+
+    # flavor 标记：区分配置版本（不要用某个符号值判断——多个 flavor 都可能
+    # 产生 CONFIG_DRM_SCHED=y，导致切换被跳过）。
+    # 修改下面的 --enable 列表后，必须同步递增 flavor 名，否则会走"复用配置"分支。
+    local flavor="base4"
+    local flavor_file="$KERNEL_OUT/.config.flavor"
+    if [ ! -f "$KERNEL_OUT/.config" ] || [ "$(cat "$flavor_file" 2>/dev/null)" != "$flavor" ]; then
         make -C "$KERNEL_SRC" O="$KERNEL_OUT" x86_64_defconfig
         "$KERNEL_SRC/scripts/config" --file "$KERNEL_OUT/.config" \
             --enable CONFIG_BPF --enable CONFIG_BPF_SYSCALL \
             --enable CONFIG_BPF_JIT --enable CONFIG_BPF_JIT_DEFAULT_ON \
-            --enable CONFIG_BPF_EVENTS --enable CONFIG_DEBUG_INFO_BTF \
+            --enable CONFIG_BPF_EVENTS --enable CONFIG_DEBUG_INFO_DWARF5 \
+            --enable CONFIG_DEBUG_INFO_BTF \
             --enable CONFIG_DEBUG_INFO_BTF_MODULES --enable CONFIG_9P_FS \
             --enable CONFIG_NET_9P --enable CONFIG_NET_9P_VIRTIO \
+            --enable CONFIG_ANDROID_BINDER_IPC --enable CONFIG_ANDROID_BINDERFS \
+            --set-val CONFIG_ANDROID_BINDER_DEVICES "binder,hwbinder,vndbinder" \
+            --enable CONFIG_DRM_VKMS --enable CONFIG_DRM_VIRTIO_GPU \
+            --enable CONFIG_KUNIT --enable CONFIG_DRM_SCHED_KUNIT_TEST \
+            --enable CONFIG_OVERLAY_FS --enable CONFIG_VETH --enable CONFIG_BRIDGE \
+            --enable CONFIG_NETFILTER_ADVANCED --enable CONFIG_BRIDGE_NETFILTER \
+            --enable CONFIG_NETFILTER_XTABLES_LEGACY --enable CONFIG_IP_NF_IPTABLES_LEGACY \
+            --enable CONFIG_NETFILTER_XT_MATCH_ADDRTYPE \
+            --enable CONFIG_IP_NF_FILTER --enable CONFIG_IP_NF_NAT \
+            --enable CONFIG_IP_NF_TARGET_MASQUERADE --enable CONFIG_IP_NF_IPTABLES \
+            --enable CONFIG_MEMCG --enable CONFIG_CFS_BANDWIDTH --enable CONFIG_FAIR_GROUP_SCHED \
+            --enable CONFIG_BLK_DEV_THROTTLING --enable CONFIG_BLK_DEV_DM --enable CONFIG_DM_CRYPT \
+            --enable CONFIG_USER_NS --enable CONFIG_CHECKPOINT_RESTORE \
+            --enable CONFIG_VXLAN --enable CONFIG_IP_VS \
+            --enable CONFIG_SCHED_CLASS_EXT \
+            --enable CONFIG_FUNCTION_TRACER --enable CONFIG_FUNCTION_GRAPH_TRACER \
+            --enable CONFIG_DYNAMIC_FTRACE --enable CONFIG_HIST_TRIGGERS \
+            --enable CONFIG_DEBUG_KERNEL \
             --set-val CONFIG_FRAME_WARN 2048
         make -C "$KERNEL_SRC" O="$KERNEL_OUT" olddefconfig
+        echo "$flavor" > "$flavor_file"
+    else
+        step "-" "复用已有 $flavor 配置 $KERNEL_OUT/.config"
     fi
+
     make -C "$KERNEL_SRC" O="$KERNEL_OUT" -j"$(nproc)"
+    if [ ! -f "$KERNEL_OUT/arch/x86/boot/bzImage" ]; then
+        die "内核编译失败：未产出 bzImage（日志：$LOG_DIR）"
+    fi
     ok "内核编译完成: $KERNEL_OUT/arch/x86/boot/bzImage"
 }

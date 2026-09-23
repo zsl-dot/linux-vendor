@@ -4,21 +4,22 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 eval "$(python3 "$SCRIPT_DIR/lib/workflow_config.py" shell)"
-GREEN='\033[0;32m'; BLUE='\033[0;34m'; RED='\033[0;31m'; NC='\033[0m'
 DEMO_DIR="$VENDOR_MODULE_DIR/kernel"
 mkdir -p "$LOG_DIR"
 
-source "$SCRIPT_DIR/lib/common.sh"
+source "$SCRIPT_DIR/lib/common.sh"   # 颜色与 step/ok/die 也在其中定义
 source "$SCRIPT_DIR/lib/kernel.sh"
+source "$SCRIPT_DIR/lib/index.sh"
 source "$SCRIPT_DIR/lib/demos.sh"
 
 usage() {
     cat <<EOF
-用法: $0 [all|init|deps|kernel|demo|sync|status|check|clean|--auto]
+用法: $0 [all|init|deps|kernel|index|demo|sync|status|check|clean|--auto]
   all（默认）  安装依赖 → 编译内核 → QEMU 验证全部 demo
   init         初始化子模块，并切换到 Linux work 分支
   deps         仅检查/安装构建依赖
   kernel       仅准备并编译内核（输出：$KERNEL_OUT）
+  index        生成 clangd 全源码跳转数据库（真实构建条目 + 兜底条目，输出：$CLANGD_DIR）
   demo         仅编译并在 QEMU 中验证 demo
   sync         同步 kernel.org → Fork master → work rebase
   status       显示 Linux 子模块分支、远程与当前提交
@@ -74,6 +75,7 @@ case "${1:-all}" in
     init)      init_workspace ;;
     deps)      install_deps "" ;;
     kernel)    require_ready_workspace; prepare_kernel ;;
+    index)     require_ready_workspace; build_index_db ;;
     demo)      require_ready_workspace; verify_all_demos ;;
     sync)      sync_workspace ;;
     status)    python3 "$SCRIPT_DIR/lib/linux_fork_workflow.py" status ;;

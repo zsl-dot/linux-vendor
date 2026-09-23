@@ -14,13 +14,16 @@ VENDOR_MODULE_DIR = PROJECT_ROOT / "vendor-module"
 KERNEL_SRC = PROJECT_ROOT / "linux-source"
 BUILD_ROOT = PROJECT_ROOT / "build"
 KERNEL_OUT = BUILD_ROOT / "linux-out"
+# 合并后的 clangd 编译数据库目录（真实构建条目 + 未编译文件兜底条目）
+CLANGD_DIR = BUILD_ROOT / "clangd"
 LEARN_OUT = BUILD_ROOT / "vendor-module"
 ROOTFS_DIR = BUILD_ROOT / "vm-rootfs"
 ROOTFS_IMG = BUILD_ROOT / "vm-rootfs.img"
 LOG_DIR = BUILD_ROOT / "logs"
 GITHUB_REPOSITORY = "git@github.com:zsl-dot/linux.git"
 DEMO_GITHUB_REPOSITORY = "git@github.com:zsl-dot/linux-vendor.git"
-KERNEL_UPSTREAM = "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git"
+# torvalds 官方镜像：与 git.kernel.org 逐字节一致；当前网络直连 kernel.org 会中断
+KERNEL_UPSTREAM = "https://github.com/torvalds/linux.git"
 KERNEL_WORK_BRANCH = "work"
 KERNEL_MASTER_BRANCH = "master"
 
@@ -33,6 +36,7 @@ def shell_exports() -> str:
         "KERNEL_SRC": KERNEL_SRC,
         "BUILD_ROOT": BUILD_ROOT,
         "KERNEL_OUT": KERNEL_OUT,
+        "CLANGD_DIR": CLANGD_DIR,
         "LEARN_OUT": LEARN_OUT,
         "ROOTFS_DIR": ROOTFS_DIR,
         "ROOTFS_IMG": ROOTFS_IMG,

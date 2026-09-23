@@ -43,4 +43,4 @@ echo
 
 export PATH="$HOME/.local/bin:$PATH"
 command -v vng >/dev/null 2>&1 || { echo "错误: 未安装 virtme-ng（pip install virtme-ng）"; exit 1; }
-vng --arch amd64 --cpus 4 --memory 1G --cwd "$PROJECT_ROOT" --run "$KERNEL_OUT"
+vng --cpus 4 --memory 1G --cwd "$PROJECT_ROOT" --run "$KERNEL_OUT"

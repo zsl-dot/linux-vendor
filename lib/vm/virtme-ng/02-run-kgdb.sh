@@ -29,5 +29,4 @@ echo "  (gdb) break __schedule"
 echo "  (gdb) continue"
 echo ""
 
-vng --arch amd64 --cpus 4 --memory 512M \
-    --run "$KERNEL_OUT" --gdb
+vng --cpus 4 --memory 512M --run "$KERNEL_OUT" --gdb

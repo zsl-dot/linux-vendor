@@ -1,4 +1,13 @@
 #!/bin/bash
+# 自动发现 $DEMO_DIR 下所有带 run.sh 的 demo；新增 demo 无需再改本文件。
+all_kernel_demos() {
+    local d
+    for d in "$DEMO_DIR"/*/run.sh; do
+        [ -f "$d" ] || continue
+        basename "$(dirname "$d")"
+    done | sort
+}
+
 run_demo() {
     local name="$1" dir="$DEMO_DIR/$1" log="$LOG_DIR/$1.log"
     echo ""; echo -e "${BLUE}--- $name ---${NC}"
@@ -13,7 +22,7 @@ run_demo() {
 verify_all_demos() {
     step "4/4" "验证全部 demo..."
     local failed="" demo
-    for demo in hello hello-proc binder-demo netlink-demo epoll-demo ebpf-demo1 ebpf-demo2 kgdb-demo; do
+    for demo in $(all_kernel_demos); do
         run_demo "$demo" || failed="$failed $demo"
     done
     [ -z "$failed" ] || die "失败:$failed（日志：$LOG_DIR）"
@@ -22,12 +31,11 @@ verify_all_demos() {
 
 do_clean() {
     echo "清理 demo 与 QEMU 编译产物..."
-    local demo
-    for demo in hello hello-proc binder-demo netlink-demo ebpf-demo1 ebpf-demo2 kgdb-demo bpflib; do
-        make -C "$DEMO_DIR/$demo" clean > /dev/null 2>&1 || true
+    local mk
+    for mk in "$DEMO_DIR"/*/Makefile "$VENDOR_MODULE_DIR"/model/*/Makefile; do
+        [ -f "$mk" ] || continue
+        make -C "$(dirname "$mk")" clean > /dev/null 2>&1 || true
     done
-    make -C "$VENDOR_MODULE_DIR/model/wake_q_demo" clean > /dev/null 2>&1 || true
-    make -C "$VENDOR_MODULE_DIR/model/wait_queue_demo" clean > /dev/null 2>&1 || true
     rm -rf "$LEARN_OUT" "$ROOTFS_DIR" "$ROOTFS_IMG" "$LOG_DIR"
     ok "清理完成（不删除内核编译目录：$KERNEL_OUT）"
 }

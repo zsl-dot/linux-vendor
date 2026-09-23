@@ -8,6 +8,12 @@
       "problemMatcher": []
     },
     {
+      "label": "Index: 全量源码跳转数据库",
+      "type": "shell",
+      "command": "./go.sh index",
+      "problemMatcher": []
+    },
+    {
       "label": "Kernel: build",
       "type": "shell",
       "command": "./go.sh kernel",

@@ -24,4 +24,5 @@ echo "可用工具: perf, strace, gdb, trace-cmd"
 echo "退出: Ctrl+D 或 poweroff"
 echo ""
 
-vng --arch amd64 --cpus 4 --memory 512M --run "$KERNEL_OUT"
+# 注意: vng 1.22 的 --arch 只接受交叉架构名（arm64/armhf/...）；本机 x86 不需要该参数
+vng --cpus 4 --memory 512M --run "$KERNEL_OUT"
