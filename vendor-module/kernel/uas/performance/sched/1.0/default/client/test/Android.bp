@@ -1,0 +1,38 @@
+cc_binary {
+    name: "UASToolSYS",
+    relative_install_path: "hw",
+
+    srcs: ["TransSchedClientTest.cpp"],
+
+    shared_libs: [
+        "libc",
+        "liblog",
+        "libutils",
+        "libcutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libTransSched",
+    ],
+
+    header_libs: ["libTransSchedHeaders"],
+}
+
+cc_binary {
+    name: "UASToolVND",
+    vendor: true,
+    relative_install_path: "hw",
+
+    srcs: ["TransSchedClientTest.cpp"],
+
+    shared_libs: [
+        "libc",
+        "liblog",
+        "libutils",
+        "libcutils",
+        "libhidlbase",
+        "libhidltransport",
+        "libTransSched",
+    ],
+
+    header_libs: ["libTransSchedHeaders"],
+}

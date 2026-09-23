@@ -1,0 +1,4 @@
+if any .hal modify, please run the follow .sh first to update the hash & makefiles
+
+vendor/transsion/spd/uas/performance/update-hash.sh
+vendor/transsion/spd/uas/performance/update-makefiles.sh

@@ -1,0 +1,13 @@
+增加aidl接口步骤（eg: cancelTransSchedUxTagsByName）
+1. 在aidl/vendor/transsion/performance/sched/ITransSched.aidl中定义新接口cancelTransSchedUxTagsByName
+2. 在TransSched.h头文件中有声明cancelTransSchedUxTagsByName
+3. 在TransSched.cpp实现文件中有完整实现cancelTransSchedUxTagsByName
+4. 更新aidp_api中的current api
+    m vendor.transsion.performance.sched.aidl-update-api
+    自动更新aidl/Android.bp，其中frozen: false,表示使用current
+5. 更新aidl_api中的frozen版本
+    m vendor.transsion.performance.sched.aidl-freeze-api
+    自动更新aidl/Android.bp，其中frozen: true,表示使用freeze版本
+6. 指定使用版本，我们使用最新生成的V2版本，修改步骤如下：
+    编辑aidl/default/client/Android.bp文件，将依赖从vendor.transsion.performance.sched.aidl-V1-ndk改为vendor.transsion.performance.sched.aidl-V2-ndk
+    编辑aidl/default/Android.bp文件，将依赖从vendor.transsion.performance.sched.aidl-V1-ndk改为vendor.transsion.performance.sched.aidl-V2-ndk

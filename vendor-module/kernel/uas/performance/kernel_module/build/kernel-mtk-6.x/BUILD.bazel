@@ -1,0 +1,76 @@
+load("//build/bazel_mgk_rules:mgk_ddk_ko.bzl", "define_mgk_ddk_ko")
+load("//build/kernel/kleaf:kernel.bzl", "ddk_headers")
+load("@mgk_info//:kernel_version.bzl", "kernel_version",)
+
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+filegroup(
+    name = "headers",
+    srcs = glob([
+          "**/*.c",
+          "**/*.h",
+    ]),
+)
+
+ddk_headers(
+   name = "uas_headers",
+   hdrs = glob(["**/*.h"]),
+   includes = [
+       ".",
+       "include",
+   ],
+)
+
+define_mgk_ddk_ko(
+    name = "trans_sched",
+    srcs = [
+        "src/sched_main.c",
+        "src/trans_pcb.c",
+        "src/sched_common.c",
+        "src/trans_fair.c",
+        "src/trans_proc.c",
+        "src/trans_sched_info.c",
+        "src/trans_binder.c",
+        "src/trans_mutex.c",
+        "src/trans_rwsem.c",
+        "src/trans_target.c",
+        "src/trans_balance.c",
+        "src/trans_locking.c",
+        "src/trans_loading.c",
+        "src/trans_trace.c",
+        "src/trans_futex.c",
+        "src/trans_workqueue.c",
+        "src/trans_xmu.c",
+    ],
+    hdrs = glob([
+        "**/*.h",
+    ]),
+    ko_deps = [
+         "//kernel_device_modules-{}/drivers/misc/mediatek/sched:scheduler".format(kernel_version),
+         "//kernel_device_modules-{}/fs/atomic_storage/tran_ufs:tran-ufshcd-core".format(kernel_version),
+         "//kernel_device_modules-{}/fs/atomic_storage/tran_ufs:tran-ufshcd-pltfrm".format(kernel_version),
+    ],
+    header_deps = [
+         "//kernel_device_modules-{}/drivers/misc/mediatek/sched:trans_sched_headers".format(kernel_version),
+         "//kernel_device_modules-{}/fs/atomic_storage/tran_ufs:headers".format(kernel_version),
+         "//kernel_device_modules-{}/fs/atomic_storage/tran_block/low_latency_sched:headers".format(kernel_version),
+	],
+    includes = ["."],
+    copts = [
+        "-I$(DEVICE_MODULES_PATH)/drivers/scsi/ufs/",
+        "-I$(DEVICE_MODULES_PATH)/drivers/scsi/ufs/tran_ufs/",
+        "-I$(DEVICE_MODULES_PATH)/drivers/scsi/ufs/vendor/",
+        "-I$(DEVICE_MODULES_PATH)/drivers/misc/mediatek/aee/mrdump/",
+        "-I$(DEVICE_MODULES_PATH)/fs/atomic_storage/tran_ufs/",
+        "-I$(DEVICE_MODULES_PATH)/fs/atomic_storage/tran_block/low_latency_sched/include/",
+        "-I$(srctree)/../vendor/transsion/std/vendor_vnd/low_latency_sched/include/",
+        "-I$(DEVICE_MODULES_PATH)/drivers/misc/mediatek/sched/trans_sched",
+        "-I$(DEVICE_MODULES_PATH)/../vendor/transsion/kernel_modules/uas/src/",
+        "-I$(DEVICE_MODULES_PATH)/../vendor/transsion/kernel_modules/uas/include/",
+    ],
+    out = "trans_sched.ko",
+)

@@ -1,0 +1,28 @@
+load("//build/kernel/kleaf:kernel.bzl", "kernel_module")
+load("//unisoc:unisoc_bazels/unisoc_constants.bzl", "UNISOC_SOC")
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+
+filegroup(
+    name = "uas_headers",
+    srcs = glob([
+		"**/*.h",
+	]),
+)
+
+kernel_module(
+    name = "trans_sched",
+    srcs = glob([
+        "**/*.c",
+        "**/*.h",
+        "Kbuild",
+        "Makefile",
+    ]),
+	outs = [
+		"trans_sched.ko",
+	],
+	kernel_build = "//unisoc:{soc}".format(soc=UNISOC_SOC),
+)

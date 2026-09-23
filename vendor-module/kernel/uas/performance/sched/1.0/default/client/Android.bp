@@ -1,0 +1,25 @@
+cc_library_headers {
+    name: "libTransSchedHeaders",
+    vendor_available: true,
+    export_include_dirs: ["include"],
+}
+
+cc_library_shared {
+    name: "libTransSched",
+    vendor_available: true,
+    system_ext_specific: true,
+    double_loadable: true,
+
+    srcs: ["TransSchedClient.cpp"],
+
+    shared_libs: [
+        "libc",
+        "liblog",
+        "libutils",
+        "libcutils",
+        "libhidlbase",
+        "libhidltransport",
+        "vendor.transsion.performance.sched@1.0",
+    ],
+    include_dirs: ["vendor/transsion/vendor_modules/uas/performance/sched/1.0/default/include"],
+}

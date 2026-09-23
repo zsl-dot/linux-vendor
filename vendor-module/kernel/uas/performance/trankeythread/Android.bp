@@ -1,0 +1,48 @@
+cc_library_headers {
+    name: "tran_bpf_key_task_headers",
+    vendor_available: true,
+    export_include_dirs: ["bpf/include"],
+}
+
+bpf {
+    name: "tranKeyTask.o",
+    srcs: ["bpf/tranKeyTask.c"],
+    btf: true,
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+}
+
+cc_library {
+    name: "libtrankeytask",
+    srcs: [
+        "lib/TranKeyTask.cpp",
+    ],
+    vendor_available: true,
+    system_ext_specific: true,
+    shared_libs: [
+        "libbase",
+        "liblog",
+        "libutils",
+        "libcutils",
+    ],
+    static_libs: [
+        "libbpf_bcc",
+        "libbpf_minimal",
+    ],
+    header_libs: [
+        "bpf_headers",
+        "tran_bpf_key_task_headers",
+    ],
+    required: [
+        "tranKeyTask.o"
+    ],
+    cflags: [
+        "-Werror",
+        "-Wall",
+        "-Wextra",
+    ],
+    export_include_dirs: ["lib/include"],
+}
+

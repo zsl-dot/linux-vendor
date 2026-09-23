@@ -1,0 +1,17 @@
+cc_binary {
+    name: "uastool",
+    vendor: true,
+    srcs: ["TransSchedTest.cpp"],
+
+    shared_libs: [
+        "libc",
+        "libm",
+        "liblog",
+        "libutils",
+        "libcutils",
+        "libbinder_ndk",
+        "libbinder",
+        "vendor.transsion.performance.sched.aidl-V2-ndk",
+    ],
+    include_dirs: ["vendor/transsion/vendor_modules/uas/performance/sched/aidl/default/include"],
+}

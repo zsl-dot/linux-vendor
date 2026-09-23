@@ -1,0 +1,24 @@
+cc_library_headers {
+    name: "libUasClientHeaders",
+    vendor_available: true,
+    export_include_dirs: ["include"],
+}
+
+cc_library_shared {
+    name: "libUasClient",
+    vendor_available: true,
+    system_ext_specific: true,
+    double_loadable: true,
+
+    srcs: ["TransSchedClient.cpp"],
+    shared_libs: [
+        "libc",
+        "liblog",
+        "libutils",
+        "libcutils",
+        "libbinder_ndk",
+        "libbinder",
+        "vendor.transsion.performance.sched.aidl-V2-ndk",
+    ],
+    include_dirs: ["vendor/transsion/vendor_modules/uas/performance/sched/aidl/default/include"],
+}

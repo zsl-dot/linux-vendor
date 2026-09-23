@@ -1,0 +1,64 @@
+<trans_sched.config version="2.0" encoding="UTF-8" enable="0x7FF">
+<!-- "enable": trans_sched state ==> 0x01/0x03:on, 0x00:off -->
+    <uxtag  default="UX_TASK_TAGS_DEFAULT" uxtag_nr="47">
+    <!-- "default": default value of uxtags for task; "uxtag_nr": quantity of instance below-->
+        <instance name="ux_exact_futex" value="UX_TASK_TAGS_FUTEX" ref="0x00"/>
+        <instance name="ux_exact_sys_ab" value="UX_TASK_TAGS_ABINDER_BIT" ref="0x03"/>
+        <instance name="ux_reckon_default" value="UX_TASK_TAGS_RECKON" ref="0x00"/>
+        <instance name="ux_exact_wmshell.anim" value="UX_TASK_TAGS_EPROMOTE1" ref="0x01"/>
+        <instance name="ux_exact_android.ui" value="UX_TASK_TAGS_EXACT" ref="0x01"/>
+        <instance name="ux_exact_audiomixer" value="UX_TASK_TAGS_EPROMOTE2" ref="0x03"/>
+        <instance name="ux_exact_camlaunch" value="UX_TASK_TAGS_EDROP1" ref="0x09"/>
+        <instance name="ux_exact_islandui_anim" value="UX_TASK_TAGS_EXACT" ref="0x01"/>
+        <instance name="ux_exact_fingerp.anim" value="UX_TASK_TAGS_EXACT" ref="0x03"/>
+        <instance name="ux_exact_screen_shot" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_android.anim" value="UX_TASK_TAGS_EXACT" ref="0x01"/>
+        <instance name="ux_exact_android.anim.lf" value="UX_TASK_TAGS_EXACT" ref="0x01"/>
+        <instance name="ux_exact_systemui_sfanim" value="UX_TASK_TAGS_EPROMOTE1" ref="0x01"/>
+        <instance name="ux_exact_launcher" value="UX_TASK_TAGS_EP1_S6" ref="0x02"/>
+        <instance name="ux_exact_launcher_anim" value="UX_TASK_TAGS_EP1_S6" ref="0x02"/>
+        <instance name="com.transsion.XOSLauncher" value="UX_TASK_TAGS_DP1_S6" ref="0x00"/>
+        <instance name="com.transsion.hilauncher" value="UX_TASK_TAGS_DP1_S6" ref="0x00"/>
+        <instance name="com.transsion.itel.launcher" value="UX_TASK_TAGS_DP1_S6" ref="0x00"/>
+        <instance name="com.transsion.launcher3" value="UX_TASK_TAGS_DP1_S6" ref="0x00"/>
+        <instance name="ux_exact_wmshell.main" value="UX_TASK_TAGS_ABINDER" ref="0x01"/>
+        <instance name="ux_exact_insets_anim" value="UX_TASK_TAGS_EXACT" ref="0x01"/>
+        <instance name="ux_exact_popup_anim" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_gsearch" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_livewallpaper" value="UX_TASK_TAGS_EXACT" ref="0x05"/>
+        <instance name="ux_exact_aizs" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_aizswork" value="UX_TASK_TAGS_EXACT" ref="0x01"/>
+        <instance name="ux_exact_credent" value="UX_TASK_TAGS_E_S6" ref="0x01"/>
+        <instance name="ux_exact_minilauncher.data" value="UX_TASK_TAGS_EXACT" ref="0x01"/>
+        <instance name="ux_exact_floatwindow" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_systemui" value="UX_TASK_TAGS_EXACT" ref="0x03"/>
+        <instance name="ux_exact_launcher_loader" value="UX_TASK_TAGS_EXACT" ref="0x01"/>
+        <instance name="ux_exact_lockboost" value="UX_TASK_TAGS_EPROMOTE1" ref="0x01"/>
+        <instance name="ux_exact_gallery" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_campause" value="UX_TASK_TAGS_EXACT" ref="0x04"/>
+        <instance name="ux_exact_inputmethod" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_NPDecoder" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_caller" value="UX_TASK_TAGS_EDROP1" ref="0x02"/>
+        <instance name="ux_exact_atomiccore" value="UX_TASK_TAGS_EDROP1" ref="0x02"/>
+        <instance name="ux_exact_PowerManagerSer" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_aod" value="UX_TASK_TAGS_EXACT" ref="0x02"/>
+        <instance name="ux_exact_campreview" value="UX_TASK_TAGS_EXACT" ref="0x18"/>
+        <instance name="ux_exact_lessurgent" value="UX_TASK_TAGS_EDROP2" ref="0x00"/>
+        <instance name="ux_exact_camcapture" value="UX_TASK_TAGS_EXACT" ref="0x01"/>
+        <instance name="ux_exact_camdualvideo" value="UX_TASK_TAGS_EXACT" ref="0x04"/>
+        <instance name="ux_exact_updatelist" value="UX_TASK_TAGS_EDROP1" ref="0x01"/>
+        <instance name="ux_exact_game" value="UX_TASK_TAGS_EXACT" ref="0x05"/>
+        <instance name="ux_exact_test" value="UX_TASK_TAGS_EDROP2_L" ref="0x05"/>
+    </uxtag>
+    <blacklist black_nr="8">
+    <!-- "black_nr": quantity of instance below-->
+        <instance name="com.transsion.sk"/>
+        <instance name="com.google.android.packageinstaller"/>
+        <instance name="c+o+m+.+a+n+t+u+t+u+.+A+B+e+n+c+h+M+a+r+k"/>
+        <instance name="c+o+m+.+a+n+t+u+t+u+.+b+e+n+c+h+m+a+r+k"/>
+        <instance name="c+o+m+.+l+u+d+a+s+h+i+.+b+e+n+c+h+m+a+r+k"/>
+        <instance name="c+o+m+.+l+u+d+a+s+h+i+.+a+i+b+e+n+c+h"/>
+        <instance name="c+o+m+.+p+r+i+m+a+t+e+l+a+b+s+.+g+e+e+k+b+e+n+c+h+6"/>
+        <instance name="c+o+m+.+a+n+d+r+o+m+e+d+a+.+a+n+d+r+o+b+e+n+c+h"/>
+    </blacklist>
+</trans_sched.config>

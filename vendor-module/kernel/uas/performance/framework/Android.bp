@@ -1,0 +1,21 @@
+java_library {
+    name: "trans_sched_s",
+    installable: true,
+    system_ext_specific: true,
+    srcs: [
+        "com/**/*.java",
+        "com/**/*.aidl",
+    ],
+    libs: [
+        "services.core",
+        "unsupportedappusage",
+    ],
+    static_libs: [
+        "vendor.transsion.performance.sched-V1.0-java",
+    ],
+    aidl: {
+       local_include_dirs: [
+            "com",
+       ],
+    },
+}

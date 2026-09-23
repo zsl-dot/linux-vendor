@@ -1,0 +1,209 @@
+component_class: HAL_HIDL
+component_name: "ITransSched"
+
+component_type_version_major: 1
+component_type_version_minor: 0
+package: "vendor.transsion.performance.sched"
+
+import: "android.hidl.base@1.0::types"
+
+interface: {
+    api: {
+        name: "setTransSchedState"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        arg: {
+            name: "state"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+    }
+
+    api: {
+        name: "getTransSchedState"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        return_type_hidl: {
+            name: "state"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+    }
+
+    api: {
+        name: "setTransSchedScene"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        arg: {
+            name: "scene"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+    }
+
+    api: {
+        name: "getTransSchedScene"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        return_type_hidl: {
+            name: "scene"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+    }
+
+    api: {
+        name: "setTransSchedUxTagsByName"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        arg: {
+            name: "pid"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        arg: {
+            name: "mainThread"
+            type: TYPE_STRING
+        }
+    }
+
+    api: {
+        name: "setTransSchedUxTags"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        arg: {
+            name: "pid"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        arg: {
+            name: "uxTags"
+            type: TYPE_SCALAR
+            scalar_type: "uint32_t"
+        }
+    }
+
+    api: {
+        name: "cancelTransSchedUxTags"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        arg: {
+            name: "pid"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+    }
+
+    api: {
+        name: "setTransSchedUxPrio"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        arg: {
+            name: "pid"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        arg: {
+            name: "shift"
+            type: TYPE_SCALAR
+            scalar_type: "uint32_t"
+        }
+    }
+
+    api: {
+        name: "getTransSchedUxTags"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        return_type_hidl: {
+            name: "uxTags"
+            type: TYPE_SCALAR
+            scalar_type: "uint32_t"
+        }
+        arg: {
+            name: "pid"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+    }
+
+    api: {
+        name: "getTransSchedUxInfo"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+        return_type_hidl: {
+            name: "info"
+            type: TYPE_STRING
+        }
+        arg: {
+            name: "pid"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+    }
+
+    api: {
+        name: "dumpTransSchedUxInfo"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+    }
+
+    api: {
+        name: "getCloudState"
+        is_inherited: false
+        return_type_hidl: {
+            name: "ret"
+            type: TYPE_SCALAR
+            scalar_type: "int32_t"
+        }
+    }
+
+    api: {
+        name: "dumpConfig"
+        is_inherited: false
+    }
+
+}

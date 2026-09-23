@@ -1,0 +1,12 @@
+config TRANS_SCHED_FEATURE
+	tristate "Transsion scheduler feature"
+	default n
+	help
+	  Open a VIP channel for UX tasks to make the scheduler prefer UX tasks.
+config TRANS_SCHED_SHARE
+	tristate "Transsion scheduler ux share feature"
+	default n
+	depends on TRANS_SCHED_FEATURE
+	help
+	  Support ux sharing.
+

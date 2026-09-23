@@ -1,0 +1,5 @@
+hidl_package_root {
+    name: "vendor.transsion.performance",
+    path: "vendor/transsion/vendor_modules/uas/performance",
+    use_current: true,
+}

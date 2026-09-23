@@ -1,0 +1,17 @@
+package vendor.transsion.performance.sched@1.0;
+
+interface ITransSched {
+    setTransSchedState(int32_t state) generates (int32_t ret);
+    getTransSchedState() generates (int32_t ret, int32_t state);
+    setTransSchedScene(int32_t scene) generates (int32_t ret);
+    getTransSchedScene() generates (int32_t ret, int32_t scene);
+    setTransSchedUxTagsByName(int32_t pid, string mainThread) generates (int32_t ret);
+    setTransSchedUxTags(int32_t pid, uint32_t uxTags) generates (int32_t ret);
+    cancelTransSchedUxTags(int32_t pid) generates (int32_t ret);
+    setTransSchedUxPrio(int32_t pid, uint32_t shift) generates (int32_t ret);
+    getTransSchedUxTags(int32_t pid) generates (int32_t ret, uint32_t uxTags);
+    getTransSchedUxInfo(int32_t pid) generates (int32_t ret, string info);
+    dumpTransSchedUxInfo() generates (int32_t ret);
+    getCloudState() generates (int32_t ret);
+    dumpConfig();
+};

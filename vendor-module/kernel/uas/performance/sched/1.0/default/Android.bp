@@ -1,0 +1,23 @@
+cc_binary {
+    name: "vendor.transsion.performance.sched@1.0-service",
+    init_rc: ["vendor.transsion.performance.sched@1.0-service.rc"],
+    relative_install_path: "hw",
+    vendor: true,
+    srcs: [
+        "Service.cpp",
+        "TransSched.cpp",
+        ":common_srcs",
+    ],
+    shared_libs: [
+        "libc",
+        "liblog",
+        "libcutils",
+        "libhidlbase",
+        "libutils",
+        "libexpat",
+        "libtranlog",
+        "vendor.transsion.performance.sched@1.0",
+    ],
+    local_include_dirs: ["include"],
+    include_dirs: ["vendor/transsion/vendor_modules/uas/performance/sched/common"],
+}

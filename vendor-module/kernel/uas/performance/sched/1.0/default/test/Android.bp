@@ -1,0 +1,17 @@
+cc_binary {
+    name: "TransSchedTest",
+    vendor: true,
+    srcs: ["TransSchedTest.cpp"],
+
+    shared_libs: [
+        "libc",
+        "libm",
+        "liblog",
+        "libutils",
+        "libcutils",
+        "libhidlbase",
+        "libhidltransport",
+        "vendor.transsion.performance.sched@1.0",
+    ],
+    include_dirs: ["vendor/transsion/vendor_modules/uas/performance/sched/1.0/default/include"],
+}

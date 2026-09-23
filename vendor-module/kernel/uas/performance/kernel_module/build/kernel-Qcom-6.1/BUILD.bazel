@@ -1,0 +1,52 @@
+# Bazel file for trans_sched
+load("//build/kernel/kleaf:kernel.bzl", "ddk_headers")
+package(
+    default_visibility = [
+        "//visibility:public",
+    ],
+)
+ddk_headers(
+    name = "uas_headers",
+    hdrs = glob([
+            "src/*.h",
+            "include/*.h"
+        ]
+    ),
+    includes = [
+        "include",
+        "src",
+    ],
+)
+load(":define_modules.bzl", "define_modules")
+
+define_modules("pineapple", "consolidate")
+
+define_modules("pineapple", "gki")
+
+define_modules("blair", "consolidate")
+
+define_modules("blair", "gki")
+
+define_modules("holi", "consolidate")
+
+define_modules("holi", "gki")
+
+define_modules("cliffs", "consolidate")
+
+define_modules("cliffs", "gki")
+
+define_modules("pitti", "consolidate")
+
+define_modules("pitti", "gki")
+
+define_modules("volcano", "consolidate")
+
+define_modules("volcano", "gki")
+
+define_modules("anorak", "consolidate")
+
+define_modules("anorak", "gki")
+
+define_modules("neo-la", "consolidate")
+
+define_modules("neo-la", "gki")
