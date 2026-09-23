@@ -25,9 +25,7 @@ mkdir -p "$ROOTFS_DIR/root/modules"
 cp "$LEARN_OUT/netlink-demo/netlink_demo.ko" "$ROOTFS_DIR/root/modules/"
 cp "$LEARN_OUT/netlink-demo/netlink-client" "$ROOTFS_DIR/bin/"
 
-cp "$ROOTFS_DIR/init" "$ROOTFS_DIR/init.bak"
-sed -i '/^exec \/bin\/sh$/d' "$ROOTFS_DIR/init"
-cat >> "$ROOTFS_DIR/init" << 'TESTEOF'
+inject_init_test << 'TESTEOF'
 
 echo "=== Netlink request/reply test ==="
 insmod /root/modules/netlink_demo.ko
@@ -40,5 +38,4 @@ TESTEOF
 
 run_qemu "$LOG"
 
-mv "$ROOTFS_DIR/init.bak" "$ROOTFS_DIR/init"
 grep -E 'Netlink request|userspace received|netlink_demo:|Netlink done' "$LOG"

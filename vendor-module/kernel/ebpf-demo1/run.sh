@@ -15,16 +15,16 @@ CMD="${1:-build}"
 echo "=== eBPF kprobe demo 验证流程 ==="
 
 # 1. 编译 bpflib
-echo "[0/5] 编译 bpflib..."
+echo "[0/4] 编译 bpflib..."
 make -C "$SCRIPT_DIR/../bpflib" > /dev/null 2>&1 || true
 
 # 2. 编译
 if [ "$CMD" = "build" ]; then
-    echo "[1/5] 全量编译 eBPF demo..."
+    echo "[1/4] 全量编译 eBPF demo..."
     make -C "$SCRIPT_DIR" clean > /dev/null 2>&1 || true
     make -C "$SCRIPT_DIR"
 elif [ "$CMD" = "update" ]; then
-    echo "[1/5] 增量编译 eBPF demo..."
+    echo "[1/4] 增量编译 eBPF demo..."
     make -C "$SCRIPT_DIR"
 else
     echo "用法: ./run.sh build|update"
@@ -32,15 +32,12 @@ else
 fi
 
 # 3. 复制到 rootfs
-echo "[2/5] 复制到 rootfs..."
+echo "[2/4] 复制到 rootfs..."
 cp "$LEARN_OUT/ebpf-demo1/ebpf-loader" "$ROOTFS_DIR/bin/"
 cp "$LEARN_OUT/ebpf-demo1/kprobe_exec.bpf.o" "$ROOTFS_DIR/root/"
 
-# 4. 写入测试用 init
-echo "[3/5] 准备测试 init..."
-cp "$ROOTFS_DIR/init" "$ROOTFS_DIR/init.bak"
-sed -i '/^exec \/bin\/sh$/d' "$ROOTFS_DIR/init"
-cat >> "$ROOTFS_DIR/init" << 'TESTEOF'
+# 4. 注入测试 init（脚本退出时自动恢复原始 init）
+inject_init_test << 'TESTEOF'
 
 # Auto-run eBPF kprobe demo
 if [ -x /bin/ebpf-loader ] && [ -f /root/kprobe_exec.bpf.o ]; then
@@ -62,25 +59,9 @@ fi
 exec /bin/sh
 TESTEOF
 
-# 5. 创建 rootfs.img
-echo "[4/5] 创建 rootfs.img..."
-dd if=/dev/zero of="$ROOTFS_IMG" bs=1M count=128 status=none
-mke2fs -q -d "$ROOTFS_DIR" "$ROOTFS_IMG" 2>/dev/null
-
-# 6. 启动 VM
-echo "[5/5] 启动 VM 验证..."
-timeout 15 qemu-system-x86_64 \
-    -kernel "$KERNEL_IMAGE" \
-    -append "root=/dev/vda rw console=ttyS0 init=/init nokaslr" \
-    -drive file="$ROOTFS_IMG",format=raw,if=none,id=drive0 \
-    -device virtio-blk-pci,drive=drive0 \
-    -m 1G -smp 2 \
-    -netdev user,id=net0 -device virtio-net-pci,netdev=net0 \
-    -display none -serial file:"$LOG" \
-    -no-reboot 2>&1 || true
-
-# 恢复原始 init
-mv "$ROOTFS_DIR/init.bak" "$ROOTFS_DIR/init"
+# 5. 启动 VM（run_qemu 重建 rootfs.img 并运行）
+echo "[4/4] 启动 VM 验证..."
+run_qemu "$LOG"
 
 echo ""
 echo "--- VM 输出 ---"

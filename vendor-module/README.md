@@ -26,13 +26,14 @@
 
 cd ..  # 到 vendor-module 的父目录
 
-# 完整 clone GitHub Fork（含完整历史）
-git clone git@github.com:zsl-dot/linux.git linux-source
-
-# 编译内核
-make -C linux-source O=build/linux-out x86_64_defconfig
-make -C linux-source O=build/linux-out -j$(nproc)
+# 在 vendor-module 的父目录（项目根目录）执行：
+./go.sh init    # 初始化子模块并切换到 linux-source/work
+./go.sh deps    # 检查/安装构建依赖
+./go.sh kernel  # 按 lib/kernel.sh 的配置组编译内核
 ```
+
+> 不要手动 `make x86_64_defconfig`：内核配置由 `lib/kernel.sh` 统一维护
+> （BTF/sched_ext/容器化/DRM 等项目特性），手动 defconfig 会导致 demo 失败。
 
 ### 2. 运行第一个 demo
 
@@ -49,22 +50,22 @@ cd vendor-module/kernel/hello
 
 ```
 <项目目录>/
-├── linux-source/      ← 内核源码 (自行 clone)
+├── linux-source/      ← 内核源码（由 ./go.sh init 初始化）
 ├── build/             ← 所有可再生成产物
 │   ├── linux-out/     ← 内核 bzImage、vmlinux、.config
-│   ├── vendor-module/   ← 模块、BPF 和用户态 demo
+│   ├── vendor-module/ ← 模块、BPF 和用户态 demo
 │   ├── vm-rootfs/     ← QEMU 根文件系统目录
 │   ├── vm-rootfs.img  ← QEMU 根文件系统镜像
 │   └── logs/          ← QEMU 与 demo 运行日志
-└── vendor-module/       ← 本目录
+└── vendor-module/     ← 本目录
     ├── env.sh
     ├── README.md
     ├── kernel/         ← 内核模块和 QEMU 验证 demo
-    │   ├── hello/      ← Demo 1
-    │   ├── binder-demo/← Demo 2
-    │   ├── netlink-demo/、epoll-demo/
-    │   ├── ebpf-demo1/、ebpf-demo2/
-    │   └── kgdb-demo/、bpflib/
+    │   ├── hello/、hello-proc/、kgdb-demo/
+    │   ├── netlink-demo/、epoll-demo/、binder-demo/
+    │   ├── ebpf-demo1/、ebpf-demo2/、ebpf-demo3/、bpflib/
+    │   ├── container-demo/、sched-demo/
+    │   └── uas/
     └── model/          ← 用户态机制模拟
         ├── wake_q_demo/
         └── wait_queue_demo/
@@ -86,19 +87,30 @@ cd vendor-module/kernel/hello
 | 4 | `kernel/epoll-demo/` | 字符设备 | 验证 poll/epoll 事件通知 |
 | 5 | `model/wake_q_demo/` | 用户态模拟 | 模拟 wake_q 链表与唤醒流程 |
 | 6 | `model/wait_queue_demo/` | 用户态模拟 | 模拟等待队列和睡眠唤醒 |
+| 7 | `kernel/uas/` | vendor 源码结构验证 | 校验 UAS Android vendor 组件的接口层和 Kbuild 对象引用 |
+| 8 | `kernel/container-demo/` | 容器化内核能力验证 | namespace/cgroups-v2/overlayfs/netns（QEMU guest 内实测） |
+| 9 | `kernel/ebpf-demo3/` | eBPF tracepoint | 挂载 sched:sched_switch 静态 tracepoint，与 demo1 的 kprobe 对照 |
+| 10 | `kernel/sched-demo/` | 调度环境验证 | sched tracepoint/函数级 ftrace/cgroup CPU 限流/sched_ext 可用性 |
 
 ## 验证流程
 
-每个 demo 的 `run.sh` 自动完成：
+普通内核 demo 的 `run.sh` 自动完成：
 
 1. 编译源码 → 2. 复制到 rootfs → 3. 写入测试 init → 4. 构建 rootfs.img → 5. 启动 QEMU 验证
 
 VM 输出通过 grep 提取关键日志打印到终端。
 
+`kernel/uas/` 是 Android vendor 源码结构验证 demo，不制作 QEMU rootfs；其依赖
+和验证边界见 [`linux-doc/uas-vendor-demo.md`](../linux-doc/uas-vendor-demo.md)。
+
 ## 安装依赖
+
+推荐在项目根目录执行 `./go.sh deps`（自动检查并安装）。手动安装：
 
 ```bash
 sudo apt install -y build-essential clang llvm gcc-multilib \
     qemu-system-x86 qemu-utils busybox-static e2fsprogs \
-    git make flex bison libssl-dev libelf-dev bc cpio
+    git make flex bison libssl-dev libelf-dev bc cpio dwarves
 ```
+
+其中 `dwarves`（pahole）是内核 BTF 的硬依赖，缺失会被静默丢弃。

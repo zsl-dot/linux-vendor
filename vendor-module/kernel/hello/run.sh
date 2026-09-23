@@ -32,11 +32,8 @@ echo "[2/4] 复制 hello.ko 到 rootfs..."
 mkdir -p "$ROOTFS_DIR/root/modules"
 cp "$LEARN_OUT/hello/hello.ko" "$ROOTFS_DIR/root/modules/"
 
-# 3. 写入测试用 init
-echo "[3/4] 准备测试 init..."
-cp "$ROOTFS_DIR/init" "$ROOTFS_DIR/init.bak"
-sed -i '/^exec \/bin\/sh$/d' "$ROOTFS_DIR/init"
-cat >> "$ROOTFS_DIR/init" << 'TESTEOF'
+# 3. 注入测试 init（脚本退出时自动恢复原始 init）
+inject_init_test << 'TESTEOF'
 
 # Auto-load hello module if available
 if [ -f /root/modules/hello.ko ]; then
@@ -50,13 +47,9 @@ fi
 exec /bin/sh
 TESTEOF
 
-# 4. 创建 rootfs.img
-# 4. 启动 VM
+# 4. 启动 VM（run_qemu 重建 rootfs.img 并运行）
 echo "[4/4] 启动 VM 验证..."
 run_qemu "$LOG"
-
-# 恢复原始 init
-mv "$ROOTFS_DIR/init.bak" "$ROOTFS_DIR/init"
 
 echo ""
 echo "--- VM 输出 ---"

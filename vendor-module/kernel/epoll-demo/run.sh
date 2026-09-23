@@ -9,9 +9,7 @@ make -C "$SCRIPT_DIR"
 mkdir -p "$ROOTFS_DIR/root/modules"
 cp "$LEARN_OUT/epoll-demo/epoll_demo.ko" "$ROOTFS_DIR/root/modules/"
 cp "$LEARN_OUT/epoll-demo/epoll-client" "$ROOTFS_DIR/bin/"
-cp "$ROOTFS_DIR/init" "$ROOTFS_DIR/init.bak"
-sed -i '/^exec \/bin\/sh$/d' "$ROOTFS_DIR/init"
-cat >> "$ROOTFS_DIR/init" <<'EOF'
+inject_init_test <<'EOF'
 echo "=== epoll demo test ==="
 insmod /root/modules/epoll_demo.ko
 /bin/epoll-client
@@ -20,5 +18,4 @@ echo "=== epoll demo done ==="
 exec /bin/sh
 EOF
 run_qemu "$LOG"
-mv "$ROOTFS_DIR/init.bak" "$ROOTFS_DIR/init"
 grep -E 'epoll demo|epoll event|epoll_demo:' "$LOG"
