@@ -100,16 +100,162 @@ schedule()                      └─ if (state & p->state)
 
 ### 层次 4: 延迟唤醒优化 (wake_q_node)
 
-**不替代上面三层，只是优化唤醒时机。** 当 waker 持锁时，把昂贵的 `try_to_wake_up` 推迟到解锁之后。
+**不替代上面三层，只是优化唤醒动作的组织方式。** 当 waker 持有保护共享状态的锁时，可以先把任务加入 `wake_q`，再在释放锁后执行昂贵的 `wake_up_process()` / `try_to_wake_up()`。
 
+```text
+持锁时：                         解锁后：
+────────────────────             ──────────────────
+spin_lock(&lock);                spin_unlock(&lock);
+wake_q_add(&wake_q, task);       wake_up_q(&wake_q);
+  ├─ 记录待唤醒任务                 ├─ 遍历待唤醒链表
+  ├─ 原子去重                       └─ wake_up_process()
+  └─ 保持任务引用                       └─ try_to_wake_up()
 ```
-持锁时 (不能直接唤醒):          解锁后 (安全了):
-─────────────────────           ────────────────
-spin_lock(&lock);               wake_up_q(&wq)
-wake_q_add(&wq, task)             └→ 遍历链表
-  └→ 只记录到链表 (O(1))              └→ try_to_wake_up(task)
-spin_unlock(&lock);
+
+这里的“延迟到解锁后”是最常见的使用模式，但不是 `wake_q_add()` 的绝对时间保证。调用 `wake_q_add()` 的位置，任务就必须已经满足被唤醒的条件；并发执行路径也可能已经替它完成唤醒。
+
+#### `wait_queue` 与 `wake_q` 的分工
+
+二者不是同一个队列，也不是互相替代的关系：
+
+```text
+wait_queue：谁在等待某个条件？
+    ↓ 找到满足条件的 waiter
+wake_q：哪些任务已经应该唤醒，但把实际唤醒暂存到稍后？
+    ↓ 释放保护共享状态的锁
+wake_up_q()
+    ↓
+wake_up_process() → try_to_wake_up()
 ```
+
+`wait_queue` 通常包含 `wait_queue_entry`，用于记录等待者、等待状态和唤醒回调；`wake_q` 则使用嵌入每个 `task_struct` 的 `wake_q_node`，只保存一次性待处理的唤醒链表关系。一个任务可以在等待队列中等待，同时在被选中唤醒后短暂进入 `wake_q`，但这两个节点表达的是不同阶段。
+
+#### `wake_q_node` 的多个作用
+
+`wake_q_node` 的作用不只是“把 `try_to_wake_up()` 延迟到解锁之后”，还包括：
+
+1. **缩短锁的临界区。** `try_to_wake_up()` 可能涉及任务的 `pi_lock`、目标 CPU 的 runqueue lock、任务入队和跨 CPU 唤醒。锁内只执行轻量的入队操作，可以减少锁竞争和锁顺序问题。
+2. **批量唤醒。** 一个 `wake_q_head` 可以收集多个任务，释放锁后由一次 `wake_up_q()` 统一遍历和唤醒。例如 `rwsem` 进入 reader phase 时，可能一次收集多个 reader。
+3. **合并重复唤醒。** 每个任务只有一个 `task->wake_q` 节点。内核用 `cmpxchg` 把节点从 `NULL` 原子地改为哨兵或链表链接状态；多个并发 waker 只有一个能成功加入，同一个任务不会被重复加入同一批待唤醒队列。
+4. **保护 `task_struct` 生命周期。** `wake_q_add()` 成功加入后调用 `get_task_struct()`；`wake_up_q()` 执行实际唤醒后调用 `put_task_struct()`，保证延迟期间任务对象仍然有效。
+5. **避免额外内存分配。** 节点嵌入 `task_struct`，不需要在自旋锁保护的路径中调用 `kmalloc()`，也不需要另外释放链表节点。
+6. **O(1) 尾部追加。** `wake_q_head.lastp` 指向下一个节点应写入的位置，因此每次追加不需要遍历已有链表。
+7. **配合内存顺序避免丢失唤醒。** `wake_q_add()` 中的原子操作和内存屏障与后续 `wake_up_process()` 的唤醒屏障配合，确保共享状态更新和唤醒动作之间的并发顺序正确。
+
+内核接口定义在 `include/linux/sched/wake_q.h`，核心数据结构如下：
+
+```c
+struct wake_q_node {
+	struct wake_q_node *next;
+};
+
+struct wake_q_head {
+	struct wake_q_node *first;
+	struct wake_q_node **lastp;
+};
+```
+
+`wake_q_node` 是侵入式单链表节点，实际节点位于 `task_struct` 内部：
+
+```c
+struct task_struct {
+	/* ... */
+	struct wake_q_node wake_q;
+};
+```
+
+遍历时通过：
+
+```c
+task = container_of(node, struct task_struct, wake_q);
+```
+
+从节点地址反推出所属的 `task_struct`。`wake_q_head.lastp` 采用二级指针实现 O(1) 追加：空队列时指向 `&head->first`，加入节点后改为指向尾节点的 `next` 字段。
+
+#### 节点状态、去重和引用计数
+
+当前内核使用 `task->wake_q.next` 表达入队状态，`WAKE_Q_TAIL` 是特殊哨兵，不等于普通的 `NULL`：
+
+```text
+task->wake_q.next == NULL
+    任务不在 wake_q 中，可以尝试加入
+
+task->wake_q.next == WAKE_Q_TAIL
+    任务已经加入，当前是队列尾部
+
+task->wake_q.next == 其他 wake_q_node
+    任务已经加入，next 指向下一个任务
+```
+
+加入时的核心逻辑可以概括为：
+
+```c
+if (cmpxchg_relaxed(&node->next, NULL, WAKE_Q_TAIL))
+	return false; /* 已经在某个 wake_q 中 */
+
+*head->lastp = node;
+head->lastp = &node->next;
+get_task_struct(task);
+return true;
+```
+
+处理队列时先清除节点状态，再真正唤醒：
+
+```c
+task = container_of(node, struct task_struct, wake_q);
+node = node->next;
+WRITE_ONCE(task->wake_q.next, NULL);
+wake_up_process(task);
+put_task_struct(task);
+```
+
+先清除 `next` 使任务可以重新入队；引用计数则保护从入队到实际处理完成这一段时间内的 `task_struct` 生命周期。调用者如果已经持有任务引用，可以使用 `wake_q_add_safe()`，由它根据是否重复入队正确处理引用。
+
+#### 为什么要与锁隔离
+
+直接在业务锁内部调用 `wake_up_process()`，可能形成类似下面的锁嵌套：
+
+```text
+业务锁 → task->pi_lock → rq->lock
+```
+
+另一个执行路径可能以不同顺序获取这些锁，从而增加死锁和锁依赖问题。`wake_q` 把操作拆成两段：
+
+```text
+锁内：修改共享状态、选择 waiter、加入 wake_q
+锁外：执行 wake_up_process()，进入调度器唤醒路径
+```
+
+这不是简单地“把工作扔到另一个线程”，而是在同一个执行上下文中把实际唤醒放到锁释放之后；调用者仍然负责在合适的位置调用 `wake_up_q()`。
+
+在实时锁实现中，还可以使用内核提供的辅助函数：
+
+```c
+raw_spin_unlock_wake(&lock, &wake_q);
+raw_spin_unlock_irq_wake(&lock, &wake_q);
+raw_spin_unlock_irqrestore_wake(&lock, flags, &wake_q);
+```
+
+这些辅助函数负责在释放 raw spinlock（以及必要的中断状态恢复）后处理 `wake_q`，并配合抢占控制，常见于 `rtmutex` 等锁实现。
+
+#### 伪唤醒与条件循环
+
+使用 `wake_q` 不能改变等待者的基本规则：任务醒来后必须重新检查条件，而不能把“被唤醒”直接等同于“条件成立”：
+
+```c
+for (;;) {
+	prepare_to_wait(&wq, &wait, state);
+
+	if (condition_is_true)
+		break;
+
+	schedule();
+}
+
+finish_wait(&wq, &wait);
+```
+
+原因包括并发竞争、多个 waiter 争抢同一个资源，以及内核明确允许的 spurious wakeup。正确的语义是：唤醒只表示“重新检查条件”，最终是否继续执行由条件本身决定。
 
 [wake_q_demo/] — 6 个 demo 完整分析这部分
 

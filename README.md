@@ -21,9 +21,16 @@
 
 ## VS Code 开发
 
-使用 VS Code 打开仓库根目录即可浏览 `linux-source/`。建议安装
-`clangd` 或 Microsoft C/C++ 扩展，然后运行命令面板中的
-`Kernel: generate compile_commands`，即可启用内核头文件和符号跳转。
+使用 VS Code 打开仓库根目录即可浏览 `linux-source/`。建议安装 `clangd` 扩展
+（已通过 `C_Cpp.intelliSenseEngine: disabled` 关闭 Microsoft C/C++ 扩展，避免两套
+跳转服务打架）。
+
+本项目只有一个内核产物：`build/linux-out/` 采用 **x86_64_defconfig 基线 + 项目特性**
+（配置清单见 `lib/kernel.sh`：BPF/BTF、sched_ext、函数级 ftrace、容器化、Binder、
+DRM VKMS/virtio-gpu 等），一次构建同时服务 demo 验证、Vulkan/GPU 驱动与 `drm_sched`
+学习（含 KUnit 测试）、CPU 调度学习以及 clangd 跳转——真实编译条目只覆盖 defconfig
+实际编到的源码，未编译到的文件由 `./go.sh index` 补充兜底编译命令，合并产出
+`build/clangd/compile_commands.json`（clangd 已指向该文件）。
 常用构建任务位于 `.vscode/tasks.json`。
 
 ## 快速开始
@@ -97,7 +104,8 @@ cd ..
 ./go.sh demo       # 在 QEMU 中验证全部 demo
 ```
 
-每个 demo 的 `run.sh build` 会编译模块、制作 rootfs、启动 QEMU，并检查 `dmesg`。例如：
+普通内核 demo 的 `run.sh build` 会编译模块、制作 rootfs、启动 QEMU，并检查 `dmesg`；
+Android 专用的 UAS 则执行源码结构验证。例如：
 
 ```bash
 cd vendor-module/kernel/hello

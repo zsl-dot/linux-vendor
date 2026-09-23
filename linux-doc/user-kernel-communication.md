@@ -99,6 +99,137 @@ echo 1 | sudo tee /proc/my_demo
 
 模块可通过 `proc_create()` 创建条目，并实现 `proc_ops`。它很适合学习模块、输出调试统计；但如果接口属于设备模型的稳定属性，通常更应选择 sysfs。
 
+### `hello-proc` 示例的读写流程
+
+`vendor-module/kernel/hello-proc/hello_module.c` 使用下面的代码在 `/proc` 目录下创建一个 procfs 条目：
+
+```c
+proc_entry = proc_create("hello_module", 0666, NULL, &hello_proc_ops);
+```
+
+成功后，用户空间可以访问：
+
+```text
+/proc/hello_module
+```
+
+这里创建的是 procfs 的目录项（`struct proc_dir_entry`）；从用户空间看，它表现为一个特殊文件，并不对应磁盘上的普通文件。参数含义如下：
+
+- `"hello_module"`：条目名称。
+- `0666`：读写权限。
+- `NULL`：父目录为空，因此直接创建在 `/proc` 下。
+- `&hello_proc_ops`：该条目的打开、读取、写入和关闭操作。
+
+示例注册的操作如下：
+
+```c
+static const struct proc_ops hello_proc_ops = {
+	.proc_open    = hello_proc_open,
+	.proc_read    = seq_read,
+	.proc_write   = hello_proc_write,
+	.proc_lseek   = seq_lseek,
+	.proc_release = single_release,
+};
+```
+
+#### 读取：`hello_proc_open()` 与 `seq_read()`
+
+执行下面的命令时：
+
+```bash
+cat /proc/hello_module
+```
+
+调用链大致是：
+
+```text
+cat
+  ↓ open()
+procfs 找到 hello_module
+  ↓ .proc_open
+hello_proc_open()
+  ↓ single_open(file, hello_proc_show, NULL)
+建立 seq_file 上下文
+  ↓ read()
+seq_read()
+  ↓
+hello_proc_show()
+  ↓ seq_printf()
+内容复制回用户空间
+```
+
+`hello_proc_open()` 本身不生成文本，它通过 `single_open()` 把实际的内容生成函数 `hello_proc_show()` 注册给 `seq_file` 框架：
+
+```c
+static int hello_proc_open(struct inode *inode, struct file *file)
+{
+	return single_open(file, hello_proc_show, NULL);
+}
+```
+
+`seq_read()` 是内核提供的通用读取实现，负责管理读取缓冲区、文件偏移和用户空间复制，并在适当的时候调用 `hello_proc_show()`：
+
+```c
+static int hello_proc_show(struct seq_file *m, void *v)
+{
+	seq_printf(m, "Hello, %s!\n", name);
+	seq_printf(m, "Module loaded, IRQ disabled count = %u\n", value);
+	return 0;
+}
+```
+
+配套的 `seq_lseek` 和 `single_release` 分别用于调整读取位置和释放 `single_open()` 创建的上下文。因此，读取路径中，`seq_read()` 提供通用流程，`hello_proc_show()` 提供本模块的具体内容。
+
+#### 写入：自定义的 `hello_proc_write()`
+
+执行：
+
+```bash
+echo 42 > /proc/hello_module
+```
+
+会调用：
+
+```text
+write()
+  ↓ .proc_write
+hello_proc_write()
+  ↓ copy_from_user()
+从用户空间复制输入
+  ↓ kstrtouint()
+将字符串转换为整数
+  ↓
+value = 42
+```
+
+写操作没有可以像 `seq_read()` 一样直接复用的通用 `seq_write()`，因为模块必须自行决定输入的格式和含义。这个示例的实现会限制输入长度，通过 `copy_from_user()` 安全复制用户数据，再使用 `kstrtouint()` 转换为无符号整数：
+
+```c
+if (len >= sizeof(kbuf))
+	len = sizeof(kbuf) - 1;
+if (copy_from_user(kbuf, buf, len))
+	return -EFAULT;
+kbuf[len] = '\0';
+if (kstrtouint(kbuf, 0, &value))
+	return -EINVAL;
+return len;
+```
+
+其中，`buf` 是用户空间指针，不能直接当作内核指针访问；`-EFAULT` 表示复制用户数据失败，`-EINVAL` 表示输入格式无效。写入成功后再次执行 `cat`，即可看到更新后的 `value`。
+
+模块卸载时调用：
+
+```c
+proc_remove(proc_entry);
+```
+
+删除 `/proc/hello_module`，避免留下指向已卸载模块代码的 procfs 操作入口。可以使用项目脚本在 QEMU 中完整验证：
+
+```bash
+cd vendor-module/kernel/hello-proc
+./run.sh build
+```
+
 ### sysfs
 
 `sysfs` 面向设备模型与属性：
