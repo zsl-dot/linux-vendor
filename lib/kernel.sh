@@ -25,7 +25,7 @@ prepare_kernel() {
     # 产生 CONFIG_DRM_SCHED=y，导致切换被跳过）。
     # 修改下面的 --enable 列表后，必须同步递增 flavor 名，否则会走"复用配置"分支。
     # 仅调整分组/顺序而不增删符号时无需递增（生成的 .config 完全相同）。
-    local flavor="base4"
+    local flavor="base5"
     local flavor_file="$KERNEL_OUT/.config.flavor"
     if [ ! -f "$KERNEL_OUT/.config" ] || [ "$(cat "$flavor_file" 2>/dev/null)" != "$flavor" ]; then
         make -C "$KERNEL_SRC" O="$KERNEL_OUT" x86_64_defconfig
@@ -42,7 +42,9 @@ prepare_kernel() {
              --enable CONFIG_FUNCTION_TRACER --enable CONFIG_FUNCTION_GRAPH_TRACER \
              --enable CONFIG_DYNAMIC_FTRACE --enable CONFIG_HIST_TRIGGERS
         # ---- container 域：namespace/cgroup/overlayfs/容器网络 ----
+        # CGROUP_BPF：cgroup v2 设备控制器（runc 依赖）与 cgroup 型 BPF 程序
         $cfg --enable CONFIG_OVERLAY_FS --enable CONFIG_VETH --enable CONFIG_BRIDGE \
+             --enable CONFIG_CGROUP_BPF \
              --enable CONFIG_NETFILTER_ADVANCED --enable CONFIG_BRIDGE_NETFILTER \
              --enable CONFIG_NETFILTER_XTABLES_LEGACY --enable CONFIG_IP_NF_IPTABLES_LEGACY \
              --enable CONFIG_NETFILTER_XT_MATCH_ADDRTYPE \

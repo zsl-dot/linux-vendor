@@ -17,6 +17,8 @@
 | 调度 | [sched-and-tracing-demo.md](sched-and-tracing-demo.md) | 调度学习环境：ftrace/cgroup 带宽/sched_ext 配置与 sched-demo |
 | 容器 | [docker-wsl-principles.md](docker-wsl-principles.md) | Docker（namespace/cgroup/overlayfs）与 WSL1/WSL2 的实现原理 |
 | 容器 | [container-isolation-landscape.md](container-isolation-landscape.md) | 业界容器化全景：runc、Kata、gVisor、Firecracker、机密容器 |
+| 容器 | [runc-on-custom-kernel.md](runc-on-custom-kernel.md) | L3 发行版通道：runc 真容器验证与 CGROUP_BPF 踩坑 |
+| GPU | [drm-skeleton.md](drm-skeleton.md) | 最小 DRM/KMS 驱动骨架：层次结构与两个 7.3 实战坑 |
 | Android | [uas-vendor-demo.md](uas-vendor-demo.md) | UAS Android vendor 组件边界与结构验证 |
 | Android | [surfaceflinger-hwc 相关](../../knowledge-base/android/composer/README.md) | SF↔HWC/composer 分析已迁至知识库 `knowledge-base/android/composer/` |
 | 方法论 | [linux-kg.md](linux-kg.md) | 内核知识图谱与学习路线 |

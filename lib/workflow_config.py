@@ -19,6 +19,9 @@ CLANGD_DIR = BUILD_ROOT / "clangd"
 LEARN_OUT = BUILD_ROOT / "vendor-module"
 ROOTFS_DIR = BUILD_ROOT / "vm-rootfs"
 ROOTFS_IMG = BUILD_ROOT / "vm-rootfs.img"
+# L3 第三通道：发行版 rootfs（真实用户态 + runc，容器运行时实验用）
+DISTRO_ROOTFS_DIR = BUILD_ROOT / "vm-distro-rootfs"
+DISTRO_ROOTFS_IMG = BUILD_ROOT / "vm-distro-rootfs.img"
 LOG_DIR = BUILD_ROOT / "logs"
 GITHUB_REPOSITORY = "git@github.com:zsl-dot/linux.git"
 DEMO_GITHUB_REPOSITORY = "git@github.com:zsl-dot/linux-vendor.git"
@@ -40,6 +43,8 @@ def shell_exports() -> str:
         "LEARN_OUT": LEARN_OUT,
         "ROOTFS_DIR": ROOTFS_DIR,
         "ROOTFS_IMG": ROOTFS_IMG,
+        "DISTRO_ROOTFS_DIR": DISTRO_ROOTFS_DIR,
+        "DISTRO_ROOTFS_IMG": DISTRO_ROOTFS_IMG,
         "LOG_DIR": LOG_DIR,
         "LINUX_GITHUB_REPOSITORY": GITHUB_REPOSITORY,
         "DEMO_GITHUB_REPOSITORY": DEMO_GITHUB_REPOSITORY,
