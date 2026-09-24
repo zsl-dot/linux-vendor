@@ -64,8 +64,9 @@ cd vendor-module/kernel/basic/hello
     │   ├── basic/       ← hello/、hello-proc/、kgdb-demo/
     │   ├── comm/        ← netlink-demo/、epoll-demo/、binder-demo/
     │   ├── ebpf/        ← bpflib/、ebpf-demo1..3/
-    │   ├── container/   ← container-demo/
+    │   ├── container/   ← container-demo/、runc-demo/（L3 发行版通道）
     │   ├── sched/       ← sched-demo/
+    │   ├── gpu/         ← drm-skeleton/（最小 DRM 驱动骨架）
     │   └── android/     ← uas/
     └── model/          ← 用户态机制模拟
         ├── wake_q_demo/
@@ -92,6 +93,8 @@ cd vendor-module/kernel/basic/hello
 | 8 | `kernel/container/container-demo/` | 容器化内核能力验证 | namespace/cgroups-v2/overlayfs/netns（QEMU guest 内实测） |
 | 9 | `kernel/ebpf/ebpf-demo3/` | eBPF tracepoint | 挂载 sched:sched_switch 静态 tracepoint，与 demo1 的 kprobe 对照 |
 | 10 | `kernel/sched/sched-demo/` | 调度环境验证 | sched tracepoint/函数级 ftrace/cgroup CPU 限流/sched_ext 可用性 |
+| 11 | `kernel/container/runc-demo/` | runc 容器运行时 | 在 Debian rootfs 上跑真 OCI 容器（L3 通道） |
+| 12 | `kernel/gpu/drm-skeleton/` | DRM 驱动骨架 | 最小 KMS 驱动，modetest 全链路验证 |
 
 ## 验证流程
 
